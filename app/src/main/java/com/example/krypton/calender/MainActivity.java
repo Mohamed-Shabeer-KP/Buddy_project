@@ -1,20 +1,23 @@
 package com.example.krypton.calender;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
+
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
+
 import com.google.api.services.calendar.model.*;
+
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -35,15 +38,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity  implements EasyPermissions.PermissionCallbacks {
-
+public class MainActivity extends Activity
+        implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
@@ -101,12 +106,17 @@ public class MainActivity extends AppCompatActivity  implements EasyPermissions.
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
-        setContentView(R.layout.activity_main);
+
+        setContentView(activityLayout);
+
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
     }
+
+
+
     /**
      * Attempt to call the API, after verifying that all the preconditions are
      * satisfied. The preconditions are: Google Play Services installed, an
@@ -407,3 +417,4 @@ public class MainActivity extends AppCompatActivity  implements EasyPermissions.
         }
     }
 }
+
