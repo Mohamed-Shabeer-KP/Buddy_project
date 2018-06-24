@@ -389,9 +389,11 @@ public class ActivityAPI extends Activity
             mProgress.hide();
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
+                startActivity(new Intent(getApplicationContext(),Main2Activity.class));
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
+                startActivity(new Intent(getApplicationContext(),Main2Activity.class));
             }
         }
 
