@@ -29,13 +29,13 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
         mWelcomeTextView = findViewById(R.id.welcomeTextView);
 
-     //   Button fetchButton = findViewById(R.id.fetchButton);
-      //  fetchButton.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-          //  public void onClick(View v) {
-       // fetchWelcome();
-          //  }
-        //});
+       Button fetchButton = findViewById(R.id.fetchButton);
+       fetchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        fetchWelcome();
+           }
+        });
 
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
