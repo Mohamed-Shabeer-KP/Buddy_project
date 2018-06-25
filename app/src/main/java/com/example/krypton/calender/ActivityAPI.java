@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -391,12 +392,15 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
-
+                mOutputText.setText("No Events Found");
+                Toast.makeText(ActivityAPI.this, "No Events Found",
+                        Toast.LENGTH_SHORT).show();
 
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
+                output.add(0, "Events Retrieved.,");
                 mOutputText.setText(TextUtils.join("\n", output));
+                Toast.makeText(ActivityAPI.this, "Events Retrieved",
+                        Toast.LENGTH_SHORT).show();
 
             }
         }
