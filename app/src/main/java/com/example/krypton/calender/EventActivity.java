@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -416,12 +417,15 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         protected void onPreExecute() {
             mOutputText.setText("");
             mProgress.show();
+
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
                 mOutputText.setText("SUCCESSFULLY UPDATED.");
+                Toast.makeText(EventActivity.this, "Event Update Succeeded",
+                        Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -444,9 +448,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 mOutputText.setText("Request cancelled.");
             }
         }
-    }
 
         }
+    }
 
 
 
