@@ -52,7 +52,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks{
 
-    GoogleAccountCredential mCredential;
+    private GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
@@ -104,11 +104,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+                "Click the \'" + BUTTON_TEXT +"\' button .");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage("CALLING ALL AUTOBOTS ...");
 
         setContentView(activityLayout);
 

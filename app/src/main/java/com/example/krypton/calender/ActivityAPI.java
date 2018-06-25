@@ -48,7 +48,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class ActivityAPI extends Activity implements EasyPermissions.PermissionCallbacks {
-    GoogleAccountCredential mCredential;
+    private GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
@@ -58,7 +58,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
+    private static final String BUTTON_TEXT = "VIEW CALANDER EVENTS";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
@@ -81,16 +81,17 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        mCallApiButton = new Button(this);
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
+            mCallApiButton = new Button(this);
+            mCallApiButton.setText(BUTTON_TEXT);
+             mCallApiButton.setOnClickListener(new View.OnClickListener() {
+
+                 @Override
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
                 mOutputText.setText("");
                 getResultsFromApi();
                 mCallApiButton.setEnabled(true);
-            }
+           }
         });
         activityLayout.addView(mCallApiButton);
 
@@ -100,11 +101,11 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+                "Click the \'" + BUTTON_TEXT +"\' button .");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage("CALLING ALL AUTOBOTS");
 
         setContentView(activityLayout);
 
