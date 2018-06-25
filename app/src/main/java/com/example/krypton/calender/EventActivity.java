@@ -1,23 +1,5 @@
 package com.example.krypton.calender;
 
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
-
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.client.util.DateTime;
-
-import com.google.api.services.calendar.model.*;
-
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -31,13 +13,34 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
+import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +50,8 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ActivityAPI extends Activity implements EasyPermissions.PermissionCallbacks {
+public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks{
+
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
@@ -58,7 +62,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
+    private static final String BUTTON_TEXT = "UPDATE EVENTS";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
@@ -148,7 +152,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
-                this, Manifest.permission.GET_ACCOUNTS)) {
+                this, android.Manifest.permission.GET_ACCOUNTS)) {
             String accountName = getPreferences(Context.MODE_PRIVATE)
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
@@ -308,7 +312,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                ActivityAPI.this,
+                EventActivity.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -319,13 +323,13 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     public class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-         public com.google.api.services.calendar.Calendar mService = null;
+        public com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
         MakeRequestTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-             mService = new com.google.api.services.calendar.Calendar.Builder(
+            mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
                     .setApplicationName("com.example.krypton.calender")
                     .build();
@@ -341,7 +345,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         @Override
         protected List<String> doInBackground(Void... params) {
             try {
-                return getDataFromApi();
+                return setDataFromApi();
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
@@ -354,29 +358,57 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        private List<String> getDataFromApi() throws IOException {
+        private List<String> setDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
-            Events events = mService.events().list("primary")
-                    .setMaxResults(10)
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
-            List<Event> items = events.getItems();
 
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-            return eventStrings;
+
+           //---------------------------------------------------
+            Event event = new Event()
+                    .setSummary("Event- April 2016");
+            //  .setLocation("Dhaka")
+            //    .setDescription("New Event 1");
+
+            DateTime startDateTime = new DateTime("2018-06-27T18:10:00+06:00");
+            EventDateTime start = new EventDateTime()
+                    .setDateTime(startDateTime);
+//   .setTimeZone("Asia/Dhaka");
+            event.setStart(start);
+
+            DateTime endDateTime = new DateTime("2018-06-28T18:40:00+06:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime);
+            // .setTimeZone("Asia/Dhaka");
+            event.setEnd(end);
+
+           /* String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
+            event.setRecurrence(Arrays.asList(recurrence));
+
+            EventAttendee[] attendees = new EventAttendee[]{
+                    new EventAttendee().setEmail("abir@aksdj.com"),
+                    new EventAttendee().setEmail("asdasd@andlk.com"),
+            };
+            event.setAttendees(Arrays.asList(attendees));
+
+            EventReminder[] reminderOverrides = new EventReminder[]{
+                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(10),
+            };
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminderOverrides));
+            event.setReminders(reminders);
+*/
+                    String calendarId = "primary";
+                    try {
+                    event = mService.events().insert(calendarId, event).execute();
+                    } catch (IOException e) {
+                    e.printStackTrace();
+                    }
+
+
+
+            //----------------------------------------------
+            return null;
         }
 
 
@@ -389,15 +421,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
-
-
-            } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
-
-            }
+                mOutputText.setText("SUCCESSFULLY UPDATED.");
         }
 
         @Override
@@ -421,5 +445,8 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
             }
         }
     }
-}
+
+        }
+
+
 

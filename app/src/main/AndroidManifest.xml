@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityAPI" />
-        <activity android:name=".Main2Activity"></activity>
+        <activity android:name=".EventActivity" />
     </application>
 
 </manifest>
