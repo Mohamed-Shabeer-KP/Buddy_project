@@ -14,8 +14,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class RemoteConfigActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-   
+
     private static final String LOADING_PHRASE_CONFIG_KEY = "loading_phrase";
     private static final String WELCOME_MESSAGE_KEY = "welcome_message";
     private static final String WELCOME_MESSAGE_CAPS_KEY = "welcome_message_caps";
@@ -30,13 +29,13 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
         mWelcomeTextView = findViewById(R.id.welcomeTextView);
 
-        Button fetchButton = findViewById(R.id.fetchButton);
-        fetchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchWelcome();
-            }
-        });
+     //   Button fetchButton = findViewById(R.id.fetchButton);
+      //  fetchButton.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+          //  public void onClick(View v) {
+       // fetchWelcome();
+          //  }
+        //});
 
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -48,8 +47,8 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
-
         fetchWelcome();
+
     }
 
     /**
