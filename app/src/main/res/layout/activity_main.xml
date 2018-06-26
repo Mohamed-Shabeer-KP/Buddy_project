@@ -16,19 +16,12 @@
         android:text="CLICK TO READ EVENTS" />
 
     <Button
-        android:id="@+id/b2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="CLICK TO UPDATE EVENTS" />
-
-    <Button
         android:id="@+id/b3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="124dp"
+        android:layout_marginBottom="203dp"
         android:text="CLICK FOR REMOTE CONFIG" />
 
     <Button
@@ -37,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
+        android:layout_marginBottom="97dp"
         android:text="CLOUD MESSAGING" />
 
     <TextView

@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
 
 import com.example.krypton.calender.Calander.ActivityAPI;
 import com.example.krypton.calender.Calander.EventActivity;
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         B1= findViewById(R.id.b1);
-        B2= findViewById(R.id.b2);
         B3= findViewById(R.id.b3);
         B4= findViewById(R.id.b4);
         B5= findViewById(R.id.b5);
@@ -40,14 +39,6 @@ public class MainActivity extends AppCompatActivity {
         B1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startActivity(new Intent(getApplicationContext(),ActivityAPI.class));
-            }
-        });
-        B2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
                 startActivity(new Intent(getApplicationContext(),EventActivity.class));
             }
         });

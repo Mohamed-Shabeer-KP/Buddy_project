@@ -102,7 +102,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button .");
+                "");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
@@ -357,11 +357,11 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
+            // List the next 30 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(10)
+                    .setMaxResults(30)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -425,6 +425,8 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                 mOutputText.setText("Request cancelled.");
             }
         }
+
     }
+
 }
 

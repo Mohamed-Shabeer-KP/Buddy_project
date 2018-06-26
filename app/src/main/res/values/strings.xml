@@ -2,7 +2,7 @@
     <string name="app_name">Calender</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="preference_file_key">Subscribe To News</string>
-    <string name="storedval">1</string>
+    <string name="storedval">0</string>
     <string name="def">0</string>
 
 
