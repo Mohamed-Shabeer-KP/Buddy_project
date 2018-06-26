@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
         //---------------CLOUD MESSAGING----------------//
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -33,7 +32,6 @@
             android:value="@string/default_notification_channel_id" />
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +41,8 @@
         </activity>
         <activity android:name=".Calander.ActivityAPI" />
         <activity android:name=".Calander.EventActivity" />
-        <activity android:name=".RemoteConfigActivity" />
+        <activity android:name=".DataProcess.RemoteConfigActivity" />
         <activity android:name=".CloudMessaging.CloudMessageActivity" />
-
         //---------------CLOUD MESSAGING------------------//
         <!-- [START firebase_service] -->
         <service android:name=".CloudMessaging.MyFirebaseMessagingService">
@@ -69,7 +66,7 @@
             </intent-filter>
         </service>
         //---------------CLOUD MESSAGING------------------//
-
+        <activity android:name=".DataProcess.SharedPreferencesJava"></activity>
     </application>
 
 </manifest>
