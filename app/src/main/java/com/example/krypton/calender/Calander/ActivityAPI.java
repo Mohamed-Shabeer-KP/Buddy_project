@@ -2,6 +2,7 @@ package com.example.krypton.calender.Calander;
 
 
 import com.example.krypton.calender.MainActivity;
+import com.example.krypton.calender.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -51,8 +52,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class ActivityAPI extends Activity implements EasyPermissions.PermissionCallbacks {
     private GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
+    private TextView T;
+    private Button B;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -60,7 +61,6 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "VIEW CALANDER EVENTS";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
@@ -74,48 +74,26 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
+        setContentView(R.layout.activity_api);
+        T=findViewById(R.id.T1);
+        B=findViewById(R.id.B1);
 
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            mCallApiButton = new Button(this);
-            mCallApiButton.setText(BUTTON_TEXT);
-             mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            B.setOnClickListener(new View.OnClickListener() {
 
                  @Override
             public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
+
            }
         });
-        activityLayout.addView(mCallApiButton);
-
-        mOutputText = new TextView(this);
-        mOutputText.setLayoutParams(tlp);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "");
-        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("CALLING ALL AUTOBOTS");
-
-        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+        getResultsFromApi();
     }
 
 
@@ -133,12 +111,13 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            T.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
         }
     }
 
+    
     /**
      * Attempts to set the account used with the API credentials. If an account
      * name was previously saved it will use that one; otherwise an account
@@ -191,7 +170,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
+                    T.setText(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -386,7 +365,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+            T.setText("");
             mProgress.show();
         }
 
@@ -394,13 +373,13 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No Events Found");
+                T.setText("No Events Found");
                 Toast.makeText(ActivityAPI.this, "No Events Found",
                         Toast.LENGTH_SHORT).show();
 
             } else {
                 output.add(0, "Events Retrieved.,");
-                mOutputText.setText(TextUtils.join("\n", output));
+               T.setText(TextUtils.join("\n", output));
                 Toast.makeText(ActivityAPI.this, "Events Retrieved",
                         Toast.LENGTH_SHORT).show();
 
@@ -420,11 +399,11 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             ActivityAPI.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
+                   T.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                T.setText("Request cancelled.");
             }
         }
 

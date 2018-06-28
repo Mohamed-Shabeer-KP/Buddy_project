@@ -33,7 +33,7 @@
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
         <activity android:name=".MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             />
 
 
