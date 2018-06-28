@@ -84,20 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 MainLayout.addView(ScheduleButton, layoutParams);
 
             }
-
-            B3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), RemoteConfigActivity.class));
-                }
-            });
-            B4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), CloudMessageActivity.class));
-                }
-            });
-
+            
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create channel to show notifications.
