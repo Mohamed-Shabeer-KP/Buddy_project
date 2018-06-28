@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout MainLayout;
     private Button ScheduleButton;
-    private Button B3;
-    private Button B4;
-
     public int FLAG_1;
     public int FLAG_2;
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle B = getIntent().getExtras();
         FLAG_1 = B.getInt("FLAG_AVAILABLE");
-        FLAG_2 = B.getInt("FLAG_DONE");
+        FLAG_2 = B.getInt("FLAG_FINISHED");
 
 
         if (FLAG_1 == 0 && FLAG_2 == 1) {
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_1 == 1 && FinalVal == 1) {
+        if (FLAG_1 == 1 && FinalVal == 0)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -67,12 +64,38 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = SPW.edit();
                         editor.putInt(getString(R.string.StoredValue), FLAG_1);
                         editor.commit();
-                        startActivity(new Intent(getApplicationContext(), EventActivity.class));
+                        Intent Show=new Intent(getApplicationContext(), EventActivity.class);
+                        Bundle BShow=new Bundle();
+                        BShow.putInt("flag",0);
+                        Show.putExtras(BShow);
+                        startActivity(Show);
                         ScheduleButton.setEnabled(true);
                     }
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
             }
+            if (FLAG_1 == 1 && FinalVal == 1 )
+             {
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(250, 100, 30, 0);
+                ScheduleButton = new Button(this);
+                ScheduleButton.setText("SHOW EXAM SCHEDULE");
+                ScheduleButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ScheduleButton.setEnabled(false);
+                        Intent Show=new Intent(getApplicationContext(), EventActivity.class);
+                        Bundle BShow=new Bundle();
+                        BShow.putInt("flag",1);
+                        Show.putExtras(BShow);
+                        startActivity(Show);
+                        ScheduleButton.setEnabled(true);
+                    }
+                });
+                MainLayout.addView(ScheduleButton, layoutParams);
+            }
+
 
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -86,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //----------------CLOUD MESSAGING----------//
         }
-    }
+
 
     @Override
     public void onBackPressed() {

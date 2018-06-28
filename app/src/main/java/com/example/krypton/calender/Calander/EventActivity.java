@@ -50,17 +50,15 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks {
     private GoogleAccountCredential mCredential;
     private TextView T;
-    private Button B;
     private ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
-
+    private int Flag;
 
 
 
@@ -73,25 +71,23 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         T=findViewById(R.id.T1);
-        B=findViewById(R.id.B1);
-
-            B.setOnClickListener(new View.OnClickListener() {
-
-                 @Override
-            public void onClick(View v) {
-                     getResults();
-           }
-        });
-
-        mProgress = new ProgressDialog(this);
-        mProgress.setMessage("CALLING ALL AUTOBOTS");
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        setEvents();
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("CALLING ALL AUTOBOTS");
+
+        Flag=1;
+        Bundle BShow=getIntent().getExtras();
+        Flag = BShow.getInt("flag");
+        if(Flag==1)
+            getResults();
+        else
+            setEvents();
+
     }
 
 
@@ -103,17 +99,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void setEvents() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            T.setText("No network connection available.");
-        } else {
-            new MakeRequestTaskFirst(mCredential).execute();
-        }
-    }
     private void getResults() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
@@ -125,6 +110,18 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             new MakeRequestTaskSecond(mCredential).execute();
         }
     }
+    private void setEvents() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (! isDeviceOnline()) {
+            T.setText("No network connection available.");
+        } else {
+            new MakeRequestTaskFirst(mCredential).execute();
+        }
+    }
+
 
     /**
      * Attempts to set the account used with the API credentials. If an account
@@ -144,7 +141,10 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                setEvents();
+                if(Flag==1)
+                    getResults();
+                else
+                    setEvents();
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -182,6 +182,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
+                    if(Flag==1)
+                        getResults();
+                    else
                     setEvents();
                 }
                 break;
@@ -197,12 +200,18 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        setEvents();
+                        if(Flag==1)
+                            getResults();
+                        else
+                            setEvents();
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
+                    if(Flag==1)
+                        getResults();
+                    else
                     setEvents();
                 }
                 break;
@@ -431,8 +440,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         }
 
-
-
         /**
          * Background task to call Google Calendar API.
          * @param params no parameters needed for this task.
@@ -440,7 +447,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected List<String> doInBackground(Void... params) {
             try {
-                return setDataFromApi();
+                return setEvent();
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
@@ -453,7 +460,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        private List<String> setDataFromApi() throws IOException {
+        private List<String> setEvent() throws IOException {
             // List the next 10 events from the primary calendar.
 
 
@@ -517,9 +524,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-
             Toast.makeText(EventActivity.this, "Event Update Succeeded",
                     Toast.LENGTH_SHORT).show();
+            getResults();
         }
 
         @Override
@@ -542,11 +549,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
         }}
-
-   @Override
-    public void onBackPressed() {
-       startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-   }
+        
 }
 
