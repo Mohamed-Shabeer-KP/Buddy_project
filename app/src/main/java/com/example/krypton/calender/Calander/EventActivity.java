@@ -1,4 +1,4 @@
-package com.example.krypton.calender;
+package com.example.krypton.calender.Calander;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -13,10 +13,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,9 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.krypton.calender.MainActivity;
+import com.example.krypton.calender.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -38,13 +36,9 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.EventReminder;
-import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,8 +48,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks{
 
     private GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
+
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -63,7 +56,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "UPDATE EVENTS";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
@@ -74,49 +66,14 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
-
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        mCallApiButton = new Button(this);
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
-            }
-        });
-        activityLayout.addView(mCallApiButton);
-
-        mOutputText = new TextView(this);
-        mOutputText.setLayoutParams(tlp);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button .");
-        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("CALLING ALL AUTOBOTS ...");
 
-        setContentView(activityLayout);
-
-        // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+        getResultsFromApi();
     }
 
 
@@ -134,7 +91,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -192,9 +149,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+                    Toast.makeText(this, "This app requires Google Play Services. Please install " +
+                            "Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show();
+
                 } else {
                     getResultsFromApi();
                 }
@@ -401,7 +358,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 */
                     String calendarId = "primary";
                     try {
-                    event = mService.events().insert(calendarId, event).execute();
+                        mService.events().insert(calendarId, event).execute();
                     } catch (IOException e) {
                     e.printStackTrace();
                     }
@@ -415,7 +372,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+
             mProgress.show();
 
         }
@@ -423,9 +380,10 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-                mOutputText.setText("SUCCESSFULLY UPDATED.");
+
                 Toast.makeText(EventActivity.this, "Event Update Succeeded",
                         Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),ActivityAPI.class));
         }
 
         @Override
@@ -441,11 +399,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             ActivityAPI.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+                    Toast.makeText(EventActivity.this, "The following error occurred:" +
+                                                        mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
         }
 
