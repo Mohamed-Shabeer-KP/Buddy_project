@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MainLayout = findViewById(R.id.mainlayout);
-        B3 = findViewById(R.id.b3);
-        B4 = findViewById(R.id.b4);
 
         Bundle B = getIntent().getExtras();
         FLAG_1 = B.getInt("FLAG_AVAILABLE");
