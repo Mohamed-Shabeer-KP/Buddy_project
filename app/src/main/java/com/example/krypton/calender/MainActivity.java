@@ -1,6 +1,5 @@
 package com.example.krypton.calender;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.krypton.calender.Calander.ActivityAPI;
 import com.example.krypton.calender.Calander.EventActivity;
 
 
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = SPW.edit();
                         editor.putInt(getString(R.string.StoredValue), FLAG_1);
                         editor.commit();
-                        startActivity(new Intent(getApplicationContext(), ActivityAPI.class));
+                        startActivity(new Intent(getApplicationContext(), EventActivity.class));
                         ScheduleButton.setEnabled(true);
                     }
                 });

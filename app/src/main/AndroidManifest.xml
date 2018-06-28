@@ -37,7 +37,6 @@
             />
 
 
-        <activity android:name=".Calander.ActivityAPI" />
         <activity android:name=".Calander.EventActivity" />
         <activity android:name=".DataProcess.RemoteConfigActivity" >
         <intent-filter>

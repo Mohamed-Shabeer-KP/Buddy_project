@@ -1,16 +1,13 @@
 package com.example.krypton.calender.DataProcess;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krypton.calender.BuildConfig;
-import com.example.krypton.calender.Calander.EventActivity;
 import com.example.krypton.calender.MainActivity;
 import com.example.krypton.calender.R;
 import com.google.android.gms.tasks.OnCompleteListener;

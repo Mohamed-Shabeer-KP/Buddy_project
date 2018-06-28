@@ -1,5 +1,25 @@
 package com.example.krypton.calender.Calander;
 
+
+import com.example.krypton.calender.MainActivity;
+import com.example.krypton.calender.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.client.util.DateTime;
+
+import com.google.api.services.calendar.model.*;
+
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -13,43 +33,25 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.method.ScrollingMovementMethod;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.krypton.calender.MainActivity;
-import com.example.krypton.calender.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
-import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks{
-
+public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks {
     private GoogleAccountCredential mCredential;
-
-    ProgressDialog mProgress;
+    private TextView T;
+    private Button B;
+    private ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -59,6 +61,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
+
+
+
     /**
      * Create the main activity.
      * @param savedInstanceState previously saved instance data.
@@ -66,14 +71,27 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_event);
+        T=findViewById(R.id.T1);
+        B=findViewById(R.id.B1);
+
+            B.setOnClickListener(new View.OnClickListener() {
+
+                 @Override
+            public void onClick(View v) {
+                     getResults();
+           }
+        });
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("CALLING ALL AUTOBOTS ...");
+        mProgress.setMessage("CALLING ALL AUTOBOTS");
 
+        // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-        getResultsFromApi();
+
+        setEvents();
     }
 
 
@@ -85,15 +103,26 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
+    private void setEvents() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
+            T.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute();
+            new MakeRequestTaskFirst(mCredential).execute();
+        }
+    }
+    private void getResults() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (! isDeviceOnline()) {
+            T.setText("No network connection available.");
+        } else {
+            new MakeRequestTaskSecond(mCredential).execute();
         }
     }
 
@@ -110,12 +139,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
-                this, android.Manifest.permission.GET_ACCOUNTS)) {
+                this, Manifest.permission.GET_ACCOUNTS)) {
             String accountName = getPreferences(Context.MODE_PRIVATE)
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
+                setEvents();
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -149,11 +178,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    Toast.makeText(this, "This app requires Google Play Services. Please install " +
-                            "Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show();
-
+                    T.setText(
+                            "This app requires Google Play Services. Please install " +
+                                    "Google Play Services on your device and relaunch this app.");
                 } else {
-                    getResultsFromApi();
+                    setEvents();
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -168,13 +197,13 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
+                        setEvents();
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
+                    setEvents();
                 }
                 break;
         }
@@ -280,11 +309,119 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    public class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    public class MakeRequestTaskSecond extends AsyncTask<Void, Void, List<String>> {
+         public com.google.api.services.calendar.Calendar mService = null;
+        private Exception mLastError = null;
+
+        MakeRequestTaskSecond(GoogleAccountCredential credential) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+             mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("com.example.krypton.calender")
+                    .build();
+
+        }
+
+
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            try {
+                return getDataFromApi();
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        /**
+         * Fetch a list of the next 10 events from the primary calendar.
+         * @return List of Strings describing returned events.
+         * @throws IOException
+         */
+        private List<String> getDataFromApi() throws IOException {
+            // List the next 30 events from the primary calendar.
+            DateTime now = new DateTime(System.currentTimeMillis());
+            List<String> eventStrings = new ArrayList<String>();
+            Events events = mService.events().list("primary")
+                    .setMaxResults(30)
+                    .setTimeMin(now)
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+            List<Event> items = events.getItems();
+
+            for (Event event : items) {
+                DateTime start = event.getStart().getDateTime();
+                if (start == null) {
+                    // All-day events don't have start times, so just use
+                    // the start date.
+                    start = event.getStart().getDate();
+                }
+                eventStrings.add(
+                        String.format("%s (%s)", event.getSummary(), start));
+            }
+            return eventStrings;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            T.setText("");
+            mProgress.show();
+        }
+
+        @Override
+        protected void onPostExecute(List<String> output) {
+            mProgress.hide();
+            if (output == null || output.size() == 0) {
+                T.setText("No Events Found");
+                Toast.makeText(EventActivity.this, "No Events Found",
+                        Toast.LENGTH_SHORT).show();
+
+            } else {
+                output.add(0, "Events Retrieved.,");
+               T.setText(TextUtils.join("\n", output));
+                Toast.makeText(EventActivity.this, "Events Retrieved",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mProgress.hide();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            EventActivity.REQUEST_AUTHORIZATION);
+                } else {
+                   T.setText("The following error occurred:\n"
+                            + mLastError.getMessage());
+                }
+            } else {
+                T.setText("Request cancelled.");
+            }
+        }
+
+
+    }
+    public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
         public com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
+        MakeRequestTaskFirst(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -320,7 +457,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             // List the next 10 events from the primary calendar.
 
 
-           //---------------------------------------------------
+            //---------------------------------------------------
             Event event = new Event()
                     .setSummary("Event- April 2016");
             //  .setLocation("Dhaka")
@@ -356,12 +493,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .setOverrides(Arrays.asList(reminderOverrides));
             event.setReminders(reminders);
 */
-                    String calendarId = "primary";
-                    try {
-                        mService.events().insert(calendarId, event).execute();
-                    } catch (IOException e) {
-                    e.printStackTrace();
-                    }
+            String calendarId = "primary";
+            try {
+                mService.events().insert(calendarId, event).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -381,9 +518,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
 
-                Toast.makeText(EventActivity.this, "Event Update Succeeded",
-                        Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(),ActivityAPI.class));
+            Toast.makeText(EventActivity.this, "Event Update Succeeded",
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -397,18 +533,20 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            ActivityAPI.REQUEST_AUTHORIZATION);
+                            EventActivity.REQUEST_AUTHORIZATION);
                 } else {
                     Toast.makeText(EventActivity.this, "The following error occurred:" +
-                                                        mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+                            mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
-        }
+        }}
 
-        }
-    }
+   @Override
+    public void onBackPressed() {
+       startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-
+   }
+}
 
