@@ -1,6 +1,7 @@
 package com.example.krypton.calender.Calander;
 
 
+import com.example.krypton.calender.MainActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -63,6 +64,9 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
+
+
+
     /**
      * Create the main activity.
      * @param savedInstanceState previously saved instance data.
@@ -71,9 +75,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
         activityLayout.setPadding(16, 16, 16, 16);
@@ -426,7 +428,12 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
             }
         }
 
-    }
 
+    }
+   @Override
+    public void onBackPressed() {
+       startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+   }
 }
 

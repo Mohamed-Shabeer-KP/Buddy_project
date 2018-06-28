@@ -1,5 +1,8 @@
 package com.example.krypton.calender.DataProcess;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krypton.calender.BuildConfig;
+import com.example.krypton.calender.Calander.EventActivity;
+import com.example.krypton.calender.MainActivity;
 import com.example.krypton.calender.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,43 +19,48 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class RemoteConfigActivity extends AppCompatActivity {
-    private static final String LOADING_PHRASE_CONFIG_KEY = "loading_phrase";
-    private static final String WELCOME_MESSAGE_KEY = "welcome_message";
-    private static final String WELCOME_MESSAGE_CAPS_KEY = "welcome_message_caps";
+
+   private static final String SCHEDULE_AVAILABLE="SCHEDULE_AVAILABLE";
+    private static final String SCHEDULE_DONE="SCHEDULE_DONE";
+
+    public int FLAG_SCHEDULE_AVAILABLE;
+    public int FLAG_SCHEDULE_DONE;
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private TextView mWelcomeTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remote_config);
 
-        mWelcomeTextView = findViewById(R.id.welcomeTextView);
-
-      /* Button fetchButton = findViewById(R.id.fetchButton);
-       fetchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-        fetchWelcome();
-           }
-        });
-       */
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
-
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
         fetchWelcome();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent splash=new Intent(getApplicationContext(),MainActivity.class);
+                Bundle B=new Bundle();
+                B.putInt("FLAG_AVAILABLE",FLAG_SCHEDULE_AVAILABLE);
+                B.putInt("FLAG_DONE",FLAG_SCHEDULE_DONE);
+                splash.putExtras(B);
+                startActivity(splash);
+                finish();
+            }
+        },3000);
+
+
+
 
     }
 
     private void fetchWelcome() {
-        mWelcomeTextView.setText(mFirebaseRemoteConfig.getString(LOADING_PHRASE_CONFIG_KEY));
 
         long cacheExpiration = 3600;
         if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
@@ -73,14 +83,14 @@ public class RemoteConfigActivity extends AppCompatActivity {
     }
 
     private void displayWelcomeMessage() {
-        String welcomeMessage = mFirebaseRemoteConfig.getString(WELCOME_MESSAGE_KEY);
-        if (mFirebaseRemoteConfig.getBoolean(WELCOME_MESSAGE_CAPS_KEY)) {
-            mWelcomeTextView.setAllCaps(true);
-        } else {
-            mWelcomeTextView.setAllCaps(false);
-        }
-        mWelcomeTextView.setText(welcomeMessage);
+         FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_AVAILABLE));
+         FLAG_SCHEDULE_DONE =  Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_DONE));
+
+
     }
 
-}
+
+    }
+
+
 

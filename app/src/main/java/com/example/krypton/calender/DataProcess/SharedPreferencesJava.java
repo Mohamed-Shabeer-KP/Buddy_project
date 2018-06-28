@@ -17,7 +17,7 @@ public class SharedPreferencesJava extends AppCompatActivity {
 
         String newval="100";
 
-        SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
+      /*  SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = SPW.edit();
         editor.putString(getString(R.string.storedval), newval);
         editor.commit();
@@ -30,5 +30,5 @@ public class SharedPreferencesJava extends AppCompatActivity {
         TextView T1;
         T1=findViewById(R.id.t1);
         T1.setText(FinalVal);
-    }
+    */}
 }

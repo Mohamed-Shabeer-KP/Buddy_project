@@ -32,16 +32,19 @@
             android:value="@string/default_notification_channel_id" />
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".MainActivity"
+            android:launchMode="singleInstance"
+            />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
         <activity android:name=".Calander.ActivityAPI" />
         <activity android:name=".Calander.EventActivity" />
-        <activity android:name=".DataProcess.RemoteConfigActivity" />
+        <activity android:name=".DataProcess.RemoteConfigActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>>
         <activity android:name=".CloudMessaging.CloudMessageActivity" />
         //---------------CLOUD MESSAGING------------------//
         <!-- [START firebase_service] -->
@@ -66,7 +69,7 @@
             </intent-filter>
         </service>
         //---------------CLOUD MESSAGING------------------//
-        <activity android:name=".DataProcess.SharedPreferencesJava"></activity>
+        <activity android:name=".DataProcess.SharedPreferencesJava" />
     </application>
 
 </manifest>
