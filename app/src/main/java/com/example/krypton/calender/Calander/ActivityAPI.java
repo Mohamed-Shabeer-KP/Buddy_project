@@ -54,7 +54,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
     private GoogleAccountCredential mCredential;
     private TextView T;
     private Button B;
-    ProgressDialog mProgress;
+    private ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -82,7 +82,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
 
                  @Override
             public void onClick(View v) {
-
+                     getResults();
            }
         });
 
@@ -93,7 +93,8 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-        getResultsFromApi();
+
+        setEvents();
     }
 
 
@@ -105,7 +106,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
+    private void setEvents() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
@@ -113,11 +114,21 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
         } else if (! isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute();
+            new MakeRequestTaskFirst(mCredential).execute();
+        }
+    }
+    private void getResults() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (! isDeviceOnline()) {
+            T.setText("No network connection available.");
+        } else {
+            new MakeRequestTaskSecond(mCredential).execute();
         }
     }
 
-    
     /**
      * Attempts to set the account used with the API credentials. If an account
      * name was previously saved it will use that one; otherwise an account
@@ -136,7 +147,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
+                setEvents();
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -174,7 +185,7 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
-                    getResultsFromApi();
+                    setEvents();
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -189,13 +200,13 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
+                        setEvents();
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
+                    setEvents();
                 }
                 break;
         }
@@ -301,11 +312,11 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    public class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    public class MakeRequestTaskSecond extends AsyncTask<Void, Void, List<String>> {
          public com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
+        MakeRequestTaskSecond(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
              mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -409,6 +420,132 @@ public class ActivityAPI extends Activity implements EasyPermissions.PermissionC
 
 
     }
+    public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
+        public com.google.api.services.calendar.Calendar mService = null;
+        private Exception mLastError = null;
+
+        MakeRequestTaskFirst(GoogleAccountCredential credential) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("com.example.krypton.calender")
+                    .build();
+
+        }
+
+
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            try {
+                return setDataFromApi();
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        /**
+         * Fetch a list of the next 10 events from the primary calendar.
+         * @return List of Strings describing returned events.
+         * @throws IOException
+         */
+        private List<String> setDataFromApi() throws IOException {
+            // List the next 10 events from the primary calendar.
+
+
+            //---------------------------------------------------
+            Event event = new Event()
+                    .setSummary("Event- April 2016");
+            //  .setLocation("Dhaka")
+            //    .setDescription("New Event 1");
+
+            DateTime startDateTime = new DateTime("2018-06-27T18:10:00+06:00");
+            EventDateTime start = new EventDateTime()
+                    .setDateTime(startDateTime);
+//   .setTimeZone("Asia/Dhaka");
+            event.setStart(start);
+
+            DateTime endDateTime = new DateTime("2018-06-28T18:40:00+06:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime);
+            // .setTimeZone("Asia/Dhaka");
+            event.setEnd(end);
+
+           /* String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
+            event.setRecurrence(Arrays.asList(recurrence));
+
+            EventAttendee[] attendees = new EventAttendee[]{
+                    new EventAttendee().setEmail("abir@aksdj.com"),
+                    new EventAttendee().setEmail("asdasd@andlk.com"),
+            };
+            event.setAttendees(Arrays.asList(attendees));
+
+            EventReminder[] reminderOverrides = new EventReminder[]{
+                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(10),
+            };
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminderOverrides));
+            event.setReminders(reminders);
+*/
+            String calendarId = "primary";
+            try {
+                mService.events().insert(calendarId, event).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            //----------------------------------------------
+            return null;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+
+            mProgress.show();
+
+        }
+
+        @Override
+        protected void onPostExecute(List<String> output) {
+            mProgress.hide();
+
+            Toast.makeText(ActivityAPI.this, "Event Update Succeeded",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            mProgress.hide();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            ActivityAPI.REQUEST_AUTHORIZATION);
+                } else {
+                    Toast.makeText(ActivityAPI.this, "The following error occurred:" +
+                            mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ActivityAPI.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
+            }
+        }}
+
    @Override
     public void onBackPressed() {
        startActivity(new Intent(getApplicationContext(), MainActivity.class));
