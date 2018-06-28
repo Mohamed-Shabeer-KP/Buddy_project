@@ -33,11 +33,9 @@
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
         <activity android:name=".MainActivity"
-            android:launchMode="singleTask"
-            />
-
-
-        <activity android:name=".Calander.EventActivity" />
+            android:launchMode="singleInstance" />
+        <activity android:name=".Calander.EventActivity"
+            android:launchMode="singleInstance"/>
         <activity android:name=".DataProcess.RemoteConfigActivity" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -68,7 +66,6 @@
             </intent-filter>
         </service>
         //---------------CLOUD MESSAGING------------------//
-        <activity android:name=".DataProcess.SharedPreferencesJava" />
     </application>
 
 </manifest>
