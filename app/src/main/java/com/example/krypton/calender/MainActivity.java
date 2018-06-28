@@ -13,13 +13,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krypton.calender.Calander.EventActivity;
-import com.example.krypton.calender.CloudMessaging.CloudMessageActivity;
-import com.example.krypton.calender.DataProcess.RemoteConfigActivity;
-import com.example.krypton.calender.DataProcess.SharedPreferencesJava;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -82,9 +78,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
-
             }
-            
+
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create channel to show notifications.
