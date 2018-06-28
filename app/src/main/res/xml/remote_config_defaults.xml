@@ -3,7 +3,7 @@
     <!-- START xml_defaults -->
     <defaultsMap>
         <entry>
-            <key>FLAG_SCHEDULE_DONE</key>
+            <key>FLAG_SCHEDULE_FINISHED</key>
             <value>0</value>
         </entry>
     <entry>
