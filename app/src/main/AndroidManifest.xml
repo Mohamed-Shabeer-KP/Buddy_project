@@ -33,11 +33,10 @@
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
         <activity android:name=".MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             />
 
 
-        <activity android:name=".Calander.ActivityAPI" />
         <activity android:name=".Calander.EventActivity" />
         <activity android:name=".DataProcess.RemoteConfigActivity" >
         <intent-filter>

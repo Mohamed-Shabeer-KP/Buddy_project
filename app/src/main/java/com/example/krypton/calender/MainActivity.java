@@ -1,6 +1,5 @@
 package com.example.krypton.calender;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -19,7 +18,7 @@ import com.example.krypton.calender.Calander.EventActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    boolean doubleBackToExitPressedOnce = false;
+    boolean exit = false;
 
     private RelativeLayout MainLayout;
     private Button ScheduleButton;
@@ -28,8 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     public int FLAG_1;
     public int FLAG_2;
-
-
 
 
     @Override
@@ -55,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
         int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-
-        if (FLAG_1 == 1 && FinalVal == 0) {
+        if (FLAG_1 == 1 && FinalVal == 1) {
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -69,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
                         ScheduleButton.setEnabled(false);
                         SharedPreferences.Editor editor = SPW.edit();
-                        editor.putInt(getString(R.string.StoredValue),FLAG_1);
+                        editor.putInt(getString(R.string.StoredValue), FLAG_1);
                         editor.commit();
-                        startActivity(new Intent(getApplicationContext(),EventActivity.class));
+                        startActivity(new Intent(getApplicationContext(), EventActivity.class));
                         ScheduleButton.setEnabled(true);
                     }
                 });
@@ -88,35 +84,27 @@ public class MainActivity extends AppCompatActivity {
                 notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                         channelName, NotificationManager.IMPORTANCE_LOW));
             }
-          /*
-           if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-            }
-        }
-        */
             //----------------CLOUD MESSAGING----------//
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, "Onooode Alojichitu Pore",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Onooode Alojichitu Pore", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
     }
 }
 
