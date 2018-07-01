@@ -19,6 +19,11 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -33,9 +38,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +67,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
     private int Flag;
+    private DatabaseReference mDatabase;
+    private ListView subListView;
+    private ArrayList<String> subList=new ArrayList<>();
 
 
 
@@ -71,6 +82,42 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         T=findViewById(R.id.T1);
+
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        subListView = findViewById(R.id.sublist);
+        final ArrayAdapter<String> arrAdap = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, subList);
+        subListView.setAdapter(arrAdap);
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    String value = dataSnapshot.getValue(String.class);
+                    subList.add(value);
+                    arrAdap.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -423,9 +470,10 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 T.setText("Request cancelled.");
             }
         }
-
-
     }
+
+    //-----------------EVENT CREATION---------------//
+
     public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
         public com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
@@ -461,25 +509,19 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
          * @throws IOException
          */
         private List<String> setEvent() throws IOException {
-            // List the next 10 events from the primary calendar.
 
-
-            //---------------------------------------------------
             Event event = new Event()
-                    .setSummary("Event- April 2016");
-            //  .setLocation("Dhaka")
-            //    .setDescription("New Event 1");
-
-            DateTime startDateTime = new DateTime("2018-06-27T18:10:00+06:00");
+                    .setSummary("BIRTHDAY")
+                 .setLocation("Asas")
+                .setDescription("New Event 1");
+            DateTime startDateTime = new DateTime("2018-07-03T09:10:00+05:30");
             EventDateTime start = new EventDateTime()
                     .setDateTime(startDateTime);
-//   .setTimeZone("Asia/Dhaka");
             event.setStart(start);
 
-            DateTime endDateTime = new DateTime("2018-06-28T18:40:00+06:00");
+            DateTime endDateTime = new DateTime("2018-07-03T09:40:00+05:30");
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime);
-            // .setTimeZone("Asia/Dhaka");
             event.setEnd(end);
 
            /* String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
@@ -490,16 +532,16 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     new EventAttendee().setEmail("asdasd@andlk.com"),
             };
             event.setAttendees(Arrays.asList(attendees));
-
+*/
             EventReminder[] reminderOverrides = new EventReminder[]{
-                    new EventReminder().setMethod("email").setMinutes(24 * 60),
-                    new EventReminder().setMethod("popup").setMinutes(10),
+                  //  new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(60),
             };
             Event.Reminders reminders = new Event.Reminders()
                     .setUseDefault(false)
                     .setOverrides(Arrays.asList(reminderOverrides));
             event.setReminders(reminders);
-*/
+
             String calendarId = "primary";
             try {
                 mService.events().insert(calendarId, event).execute();
@@ -507,9 +549,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 e.printStackTrace();
             }
 
-
-
-            //----------------------------------------------
             return null;
         }
 
@@ -549,6 +588,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
         }}
-        
+
 }
 

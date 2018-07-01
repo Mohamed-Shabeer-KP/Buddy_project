@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         MainLayout = findViewById(R.id.mainlayout);
 
         Bundle B = getIntent().getExtras();
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         ScheduleButton.setEnabled(false);
+
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
                         Bundle BShow=new Bundle();
                         BShow.putInt("flag",1);
