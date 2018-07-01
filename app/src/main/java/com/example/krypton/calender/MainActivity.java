@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         MainLayout = findViewById(R.id.mainlayout);
 
         Bundle B = getIntent().getExtras();
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_1 == 1 && FinalVal == 0)
+        if (FLAG_1 == 1 && FinalVal == 1)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
             }
-            if (FLAG_1 == 1 && FinalVal == 1 )
+          /*  if (FLAG_1 == 1 && FinalVal == 1 )
              {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         ScheduleButton.setEnabled(false);
+
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
                         Bundle BShow=new Bundle();
                         BShow.putInt("flag",1);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
             }
-
+*/
 
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
