@@ -74,23 +74,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         setContentView(R.layout.activity_event);
         T=findViewById(R.id.T1);
 
-
-  /*      mDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String value = dataSnapshot.getValue(String.class);
-                subList.add(value);
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-*/
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -137,6 +120,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (! isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
+
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("subjects");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -147,6 +131,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     {
                         obj[i]=new SubjectDetails();
                         obj[i].setSummary((String) dataSnapshot.child("sub"+i).child("name").getValue());
+                        obj[i].setStartingDate((String) dataSnapshot.child("sub"+i).child("start").getValue());
+                        obj[i].setEndingDate((String) dataSnapshot.child("sub"+i).child("end").getValue());
                     }
 
                     for(int i = 0; i < val; i++) {
@@ -473,6 +459,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         public com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
         String summary;
+        String start;
+        String end;
         MakeRequestTaskFirst(GoogleAccountCredential credential,SubjectDetails obj) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -481,6 +469,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .setApplicationName("com.example.krypton.calender")
                     .build();
             summary=obj.getSummary();
+            start=obj.getStartingDate();
+            end=obj.getEndingDate();
         }
 
 
@@ -515,34 +505,24 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 Event event = new Event()
                         .setSummary(summary)
                         .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCE");
-                DateTime startDateTime = new DateTime("2018-07-03T09:10:00+05:30");
+                DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);
                 event.setStart(start);
 
-                DateTime endDateTime = new DateTime("2018-07-03T09:40:00+05:30");
+                DateTime endDateTime = new DateTime(end+"+05:30");
                 EventDateTime end = new EventDateTime()
                         .setDateTime(endDateTime);
                 event.setEnd(end);
 
-           /* String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
-            event.setRecurrence(Arrays.asList(recurrence));
-
-            EventAttendee[] attendees = new EventAttendee[]{
-                    new EventAttendee().setEmail("abir@aksdj.com"),
-                    new EventAttendee().setEmail("asdasd@andlk.com"),
-            };
-            event.setAttendees(Arrays.asList(attendees));
-*/
-              /*  EventReminder[] reminderOverrides = new EventReminder[]{
-                        //  new EventReminder().setMethod("email").setMinutes(24 * 60),
+                EventReminder[] reminderOverrides = new EventReminder[]{
                         new EventReminder().setMethod("popup").setMinutes(60),
                 };
                 Event.Reminders reminders = new Event.Reminders()
                         .setUseDefault(false)
                         .setOverrides(Arrays.asList(reminderOverrides));
                 event.setReminders(reminders);
-            */
+
                 String calendarId = "primary";
                    try {
                      mService.events().insert(calendarId, event).execute();

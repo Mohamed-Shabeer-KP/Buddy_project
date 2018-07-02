@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_1 == 1 && FinalVal == 1)
+        if (FLAG_1 == 1 && FinalVal == 0)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
             }
-          /*  if (FLAG_1 == 1 && FinalVal == 1 )
+            if (FLAG_1 == 1 && FinalVal == 1 )
              {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 MainLayout.addView(ScheduleButton, layoutParams);
             }
-*/
+
 
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
