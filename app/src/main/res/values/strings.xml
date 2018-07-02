@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">Calender</string>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="preference_file_key">Subscribe To News</string>
+    <string name="load">SCHEDULING EXAM...</string>
+    <string name="schedule_button">SCHEDULE EXAM</string>
+
+    //------------------Shared preferences----------------------//
     <string name="StoredValue">0</string>
     <string name="DefaultValue">0</string>
-
-
+    //-----------------------------------------------------------//
     //------------------CLOUD MESSAGING--------------------------------//
     <string name="quickstart_message">Click the SUBSCRIBE TO NEWS button below to subscribe to the
         news topic. Messages sent to the news topic will be received. The LOG TOKEN button logs the

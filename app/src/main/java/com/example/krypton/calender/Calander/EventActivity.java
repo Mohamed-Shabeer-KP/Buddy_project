@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -84,6 +85,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         Flag=1;
         Bundle BShow=getIntent().getExtras();
+        assert BShow != null;
         Flag = BShow.getInt("flag");
         if(Flag==1)
             getResults();
@@ -101,23 +103,25 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
+    @SuppressLint("SetTextI18n")
     private void getResults() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
             new MakeRequestTaskSecond(mCredential).execute();
         }
     }
+    @SuppressLint("SetTextI18n")
     private void setEvents() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
 
@@ -199,6 +203,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * @param data Intent (containing result data) returned by incoming
      *     activity result.
      */
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
@@ -294,8 +299,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connMgr != null;
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+        return (networkInfo == null || !networkInfo.isConnected());
     }
 
     /**
@@ -308,7 +314,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
+        return connectionStatusCode != ConnectionResult.SUCCESS;
     }
 
     /**
@@ -346,8 +352,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
+    @SuppressLint("StaticFieldLeak")
     public class MakeRequestTaskSecond extends AsyncTask<Void, Void, List<String>> {
-         public com.google.api.services.calendar.Calendar mService = null;
+         com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
 
         MakeRequestTaskSecond(GoogleAccountCredential credential) {
@@ -380,12 +387,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
             // List the next 30 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
+            List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
                     .setMaxResults(30)
                     .setTimeMin(now)
@@ -414,6 +420,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mProgress.show();
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -431,6 +438,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             }
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onCancelled() {
             mProgress.hide();
@@ -455,8 +463,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
     //-----------------EVENT CREATION---------------//
 
+    @SuppressLint("StaticFieldLeak")
     public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
-        public com.google.api.services.calendar.Calendar mService = null;
+        com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
         String summary;
         String start;
@@ -498,7 +507,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
          */
         private List<String> setEvent() {
 
