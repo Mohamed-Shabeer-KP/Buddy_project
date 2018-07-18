@@ -1,4 +1,4 @@
-package com.example.krypton.calender;
+package com.boss.buddy.calender;
 
 import org.junit.Test;
 
