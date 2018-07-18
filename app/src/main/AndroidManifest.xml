@@ -33,12 +33,12 @@
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
         <activity
-            android:name="com.boss.buddy.calender.MainActivity"
+            android:name="com.boss.buddy.MainActivity"
             android:launchMode="singleInstance" />
         <activity
-            android:name="com.boss.buddy.calender.Calander.EventActivity"
+            android:name="com.boss.buddy.CalendarEvent.EventActivity"
             android:launchMode="singleInstance" />
-        <activity android:name="com.boss.buddy.calender.DataProcess.RemoteConfigActivity">
+        <activity android:name="com.boss.buddy.CloudDataFetch.RemoteConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,10 +46,10 @@
             </intent-filter>
         </activity>
         >
-        <activity android:name="com.boss.buddy.calender.CloudMessaging.CloudMessageActivity" />
+        <activity android:name="com.boss.buddy.CloudMessaging.CloudMessageActivity" />
         //---------------CLOUD MESSAGING------------------//
         <!-- [START firebase_service] -->
-        <service android:name="com.boss.buddy.calender.CloudMessaging.MyFirebaseMessagingService">
+        <service android:name="com.boss.buddy.CloudMessaging.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -58,7 +58,7 @@
         <!-- [START firebase_iid_service] -->
         <!-- [END firebase_iid_service] -->
         <service
-            android:name="com.boss.buddy.calender.CloudMessaging.MyJobService"
+            android:name="com.boss.buddy.CloudMessaging.MyJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />

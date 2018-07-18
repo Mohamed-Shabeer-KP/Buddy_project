@@ -18,7 +18,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 public class RemoteConfigActivity extends AppCompatActivity {
 
    private static final String SCHEDULE_AVAILABLE="SCHEDULE_AVAILABLE";
-    private static final String SCHEDULE_DONE="SCHEDULE_FINISHED";
+    private static final String SCHEDULE_FINISHED="SCHEDULE_FINISHED";
 
     public int FLAG_SCHEDULE_AVAILABLE;
     public int FLAG_SCHEDULE_FINISHED;
@@ -75,7 +75,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
                         }
 
                         FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_AVAILABLE));
-                        FLAG_SCHEDULE_FINISHED =  Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_DONE));
+                        FLAG_SCHEDULE_FINISHED =  Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_FINISHED));
 
                     }
                 });

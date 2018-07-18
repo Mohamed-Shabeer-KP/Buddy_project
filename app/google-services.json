@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "169387400019",
-    "firebase_url": "https://test-f0c13.firebaseio.com",
-    "project_id": "test-f0c13",
-    "storage_bucket": "test-f0c13.appspot.com"
+    "project_number": "337542897348",
+    "firebase_url": "https://project-student-buddy.firebaseio.com",
+    "project_id": "project-student-buddy",
+    "storage_bucket": "project-student-buddy.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:169387400019:android:a80fdb795e578a66",
+        "mobilesdk_app_id": "1:337542897348:android:8e8b3d63e53fb2b1",
         "android_client_info": {
-          "package_name": "com.example.krypton.calender"
+          "package_name": "com.boss.buddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "169387400019-iougmcf7l6pmbpaob22cubcpl0tavbp3.apps.googleusercontent.com",
+          "client_id": "337542897348-b156vm1u6uavq5sdc0abq499gbrc2uq8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.krypton.calender",
-            "certificate_hash": "82e28ffea213079d6243d6b9be5ca03fc080007d"
+            "package_name": "com.boss.buddy",
+            "certificate_hash": "3071c7c9078c6578d75d1960c5f3d32cbca644f9"
           }
         },
         {
-          "client_id": "169387400019-i4ltn7v7q5tcat0o4q798be2rv71j289.apps.googleusercontent.com",
+          "client_id": "337542897348-veh2g2d9bn0qh2i6ckp0rn16n34066c7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6HApDkzgJYLdmzYA0YcAR2gui7Z-5go8"
+          "current_key": "AIzaSyBGo9dtotcU4sIzeOZFDr1IFunP1d_bvWQ"
         }
       ],
       "services": {
@@ -40,41 +40,10 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "169387400019-i4ltn7v7q5tcat0o4q798be2rv71j289.apps.googleusercontent.com",
+              "client_id": "337542897348-veh2g2d9bn0qh2i6ckp0rn16n34066c7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:169387400019:android:f4da7a3b438fc367",
-        "android_client_info": {
-          "package_name": "com.example.krypton.fbdb"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "169387400019-i4ltn7v7q5tcat0o4q798be2rv71j289.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC6HApDkzgJYLdmzYA0YcAR2gui7Z-5go8"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
