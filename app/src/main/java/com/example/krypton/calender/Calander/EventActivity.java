@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -74,23 +75,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         setContentView(R.layout.activity_event);
         T=findViewById(R.id.T1);
 
-
-  /*      mDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String value = dataSnapshot.getValue(String.class);
-                subList.add(value);
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-*/
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -101,6 +85,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         Flag=1;
         Bundle BShow=getIntent().getExtras();
+        assert BShow != null;
         Flag = BShow.getInt("flag");
         if(Flag==1)
             getResults();
@@ -118,25 +103,28 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
+    @SuppressLint("SetTextI18n")
     private void getResults() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
             new MakeRequestTaskSecond(mCredential).execute();
         }
     }
+    @SuppressLint("SetTextI18n")
     private void setEvents() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (isDeviceOnline()) {
             T.setText("No network connection available.");
         } else {
+
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("subjects");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -147,6 +135,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     {
                         obj[i]=new SubjectDetails();
                         obj[i].setSummary((String) dataSnapshot.child("sub"+i).child("name").getValue());
+                        obj[i].setStartingDate((String) dataSnapshot.child("sub"+i).child("start").getValue());
+                        obj[i].setEndingDate((String) dataSnapshot.child("sub"+i).child("end").getValue());
                     }
 
                     for(int i = 0; i < val; i++) {
@@ -213,6 +203,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * @param data Intent (containing result data) returned by incoming
      *     activity result.
      */
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
@@ -308,8 +299,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connMgr != null;
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+        return (networkInfo == null || !networkInfo.isConnected());
     }
 
     /**
@@ -322,7 +314,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
                 apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
+        return connectionStatusCode != ConnectionResult.SUCCESS;
     }
 
     /**
@@ -360,8 +352,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
+    @SuppressLint("StaticFieldLeak")
     public class MakeRequestTaskSecond extends AsyncTask<Void, Void, List<String>> {
-         public com.google.api.services.calendar.Calendar mService = null;
+         com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
 
         MakeRequestTaskSecond(GoogleAccountCredential credential) {
@@ -394,12 +387,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
             // List the next 30 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
+            List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
                     .setMaxResults(30)
                     .setTimeMin(now)
@@ -428,6 +420,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mProgress.show();
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -445,6 +438,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             }
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onCancelled() {
             mProgress.hide();
@@ -469,10 +463,13 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
     //-----------------EVENT CREATION---------------//
 
+    @SuppressLint("StaticFieldLeak")
     public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
-        public com.google.api.services.calendar.Calendar mService = null;
+        com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
         String summary;
+        String start;
+        String end;
         MakeRequestTaskFirst(GoogleAccountCredential credential,SubjectDetails obj) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -481,6 +478,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .setApplicationName("com.example.krypton.calender")
                     .build();
             summary=obj.getSummary();
+            start=obj.getStartingDate();
+            end=obj.getEndingDate();
         }
 
 
@@ -508,41 +507,30 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
          */
         private List<String> setEvent() {
 
                 Event event = new Event()
                         .setSummary(summary)
                         .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCE");
-                DateTime startDateTime = new DateTime("2018-07-03T09:10:00+05:30");
+                DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);
                 event.setStart(start);
 
-                DateTime endDateTime = new DateTime("2018-07-03T09:40:00+05:30");
+                DateTime endDateTime = new DateTime(end+"+05:30");
                 EventDateTime end = new EventDateTime()
                         .setDateTime(endDateTime);
                 event.setEnd(end);
 
-           /* String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
-            event.setRecurrence(Arrays.asList(recurrence));
-
-            EventAttendee[] attendees = new EventAttendee[]{
-                    new EventAttendee().setEmail("abir@aksdj.com"),
-                    new EventAttendee().setEmail("asdasd@andlk.com"),
-            };
-            event.setAttendees(Arrays.asList(attendees));
-*/
-              /*  EventReminder[] reminderOverrides = new EventReminder[]{
-                        //  new EventReminder().setMethod("email").setMinutes(24 * 60),
+                EventReminder[] reminderOverrides = new EventReminder[]{
                         new EventReminder().setMethod("popup").setMinutes(60),
                 };
                 Event.Reminders reminders = new Event.Reminders()
                         .setUseDefault(false)
                         .setOverrides(Arrays.asList(reminderOverrides));
                 event.setReminders(reminders);
-            */
+
                 String calendarId = "primary";
                    try {
                      mService.events().insert(calendarId, event).execute();

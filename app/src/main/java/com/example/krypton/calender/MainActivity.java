@@ -1,5 +1,6 @@
 package com.example.krypton.calender;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -20,19 +21,20 @@ import com.example.krypton.calender.Calander.EventActivity;
 public class MainActivity extends AppCompatActivity {
     boolean exit = false;
 
-    private RelativeLayout MainLayout;
     private Button ScheduleButton;
     public int FLAG_1;
     public int FLAG_2;
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MainLayout = findViewById(R.id.mainlayout);
+        RelativeLayout mainLayout = findViewById(R.id.mainlayout);
 
         Bundle B = getIntent().getExtras();
+        assert B != null;
         FLAG_1 = B.getInt("FLAG_AVAILABLE");
         FLAG_2 = B.getInt("FLAG_FINISHED");
 
@@ -41,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
             editor.putInt(getString(R.string.StoredValue), FLAG_1);
-            editor.commit();
+            editor.apply();
         }
         SharedPreferences SPR = this.getPreferences(Context.MODE_PRIVATE);
         int DefaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
         int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_1 == 1 && FinalVal == 1)
+        if (FLAG_1 == 1 && FinalVal == 0)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         ScheduleButton.setEnabled(false);
                         SharedPreferences.Editor editor = SPW.edit();
                         editor.putInt(getString(R.string.StoredValue), FLAG_1);
-                        editor.commit();
+                        editor.apply();
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
                         Bundle BShow=new Bundle();
                         BShow.putInt("flag",0);
@@ -71,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
                         ScheduleButton.setEnabled(true);
                     }
                 });
-                MainLayout.addView(ScheduleButton, layoutParams);
+                mainLayout.addView(ScheduleButton, layoutParams);
             }
-          /*  if (FLAG_1 == 1 && FinalVal == 1 )
+            if (FLAG_1 == 1 && FinalVal == 1 )
              {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -93,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
                         ScheduleButton.setEnabled(true);
                     }
                 });
-                MainLayout.addView(ScheduleButton, layoutParams);
+                mainLayout.addView(ScheduleButton, layoutParams);
             }
-*/
+
 
             //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 String channelName = getString(R.string.default_notification_channel_name);
                 NotificationManager notificationManager =
                         getSystemService(NotificationManager.class);
+                assert notificationManager != null;
                 notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                         channelName, NotificationManager.IMPORTANCE_LOW));
             }
