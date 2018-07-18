@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.boss.buddy.BuildConfig;
-import com.boss.buddy.MainActivity;
+import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,14 +17,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class RemoteConfigActivity extends AppCompatActivity {
 
-   private static final String SCHEDULE_AVAILABLE="SCHEDULE_AVAILABLE";
-    private static final String SCHEDULE_FINISHED="SCHEDULE_FINISHED";
-
-    public int FLAG_SCHEDULE_AVAILABLE;
-    public int FLAG_SCHEDULE_FINISHED;
-
+    private int FLAG_SCHEDULE_AVAILABLE;
+    private int FLAG_SCHEDULE_FINISHED;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +37,15 @@ public class RemoteConfigActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent splash=new Intent(getApplicationContext(),MainActivity.class);
+                Intent StartMain=new Intent(getApplicationContext(),MainMenu.class);
                 Bundle B=new Bundle();
                 B.putInt("FLAG_AVAILABLE",FLAG_SCHEDULE_AVAILABLE);
                 B.putInt("FLAG_FINISHED",FLAG_SCHEDULE_FINISHED);
-                splash.putExtras(B);
-                startActivity(splash);
+                StartMain.putExtras(B);
+                startActivity(StartMain);
                 finish();
             }
         },3000);
-
-
-
-
     }
 
     private void fetchValues() {
@@ -74,8 +65,8 @@ public class RemoteConfigActivity extends AppCompatActivity {
                             Toast.makeText(RemoteConfigActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
 
-                        FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_AVAILABLE));
-                        FLAG_SCHEDULE_FINISHED =  Integer.parseInt(mFirebaseRemoteConfig.getString(SCHEDULE_FINISHED));
+                        FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_AVAILABLE"));
+                        FLAG_SCHEDULE_FINISHED =  Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
 
                     }
                 });

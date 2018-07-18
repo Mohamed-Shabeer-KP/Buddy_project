@@ -18,12 +18,11 @@ import android.widget.Toast;
 import com.boss.buddy.CalendarEvent.EventActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity {
     boolean exit = false;
-
     private Button ScheduleButton;
-    public int FLAG_1;
-    public int FLAG_2;
+    private int FLAG_AVAILABLE;
+    private int FLAG_FINISHED;
 
 
     @SuppressLint("SetTextI18n")
@@ -35,22 +34,23 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle B = getIntent().getExtras();
         assert B != null;
-        FLAG_1 = B.getInt("FLAG_AVAILABLE");
-        FLAG_2 = B.getInt("FLAG_FINISHED");
+        FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
+        FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
 
-        if (FLAG_1 == 0 && FLAG_2 == 1) {
+        if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
-            editor.putInt(getString(R.string.StoredValue), FLAG_1);
+            editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
             editor.apply();
         }
+
         SharedPreferences SPR = this.getPreferences(Context.MODE_PRIVATE);
         int DefaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-        int FinalVal = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
+        int SCHEDULE_DONE = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_1 == 1 && FinalVal == 0)
+        if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
@@ -62,20 +62,23 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         ScheduleButton.setEnabled(false);
+
                         SharedPreferences.Editor editor = SPW.edit();
-                        editor.putInt(getString(R.string.StoredValue), FLAG_1);
+                        editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
                         editor.apply();
+
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
                         Bundle BShow=new Bundle();
                         BShow.putInt("flag",0);
                         Show.putExtras(BShow);
                         startActivity(Show);
+
                         ScheduleButton.setEnabled(true);
                     }
                 });
                 mainLayout.addView(ScheduleButton, layoutParams);
             }
-            if (FLAG_1 == 1 && FinalVal == 1 )
+            if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);

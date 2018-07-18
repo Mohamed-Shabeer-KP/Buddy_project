@@ -12,7 +12,7 @@ import com.boss.buddy.R;
 
 public class CloudMessageActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainMenu";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

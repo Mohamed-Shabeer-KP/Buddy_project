@@ -52,7 +52,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks {
     private GoogleAccountCredential mCredential;
-    private TextView T;
+    private TextView DispEvent;
     private ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -62,8 +62,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
     private int Flag;
-
-    public int val;
+    private int SubNo;
 
     /**
      * Create the main activity.
@@ -73,7 +72,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        T=findViewById(R.id.T1);
+        DispEvent =findViewById(R.id.T1);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -83,18 +82,14 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("CALLING ALL AUTOBOTS");
 
-        Flag=1;
         Bundle BShow=getIntent().getExtras();
         assert BShow != null;
         Flag = BShow.getInt("flag");
-        if(Flag==1)
-            getResults();
-        else
+        if(Flag==0)
             setEvents();
-
+        else
+            getResults();
     }
-
-
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -104,34 +99,22 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * appropriate.
      */
     @SuppressLint("SetTextI18n")
-    private void getResults() {
-        if (isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (isDeviceOnline()) {
-            T.setText("No network connection available.");
-        } else {
-            new MakeRequestTaskSecond(mCredential).execute();
-        }
-    }
-    @SuppressLint("SetTextI18n")
     private void setEvents() {
         if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (isDeviceOnline()) {
-            T.setText("No network connection available.");
+            DispEvent.setText("No network connection available.");
         } else {
 
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("subjects");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    val = Integer.parseInt(String.valueOf(dataSnapshot.child("subno").getValue()));
-                    SubjectDetails[] obj=new SubjectDetails[val];
-                    for(int i = 0; i < val; i++)
+                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("subno").getValue()));
+                    SubjectDetails[] obj=new SubjectDetails[SubNo];
+                    for(int i = 0; i < SubNo; i++)
                     {
                         obj[i]=new SubjectDetails();
                         obj[i].setSummary((String) dataSnapshot.child("sub"+i).child("name").getValue());
@@ -139,7 +122,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         obj[i].setEndingDate((String) dataSnapshot.child("sub"+i).child("end").getValue());
                     }
 
-                    for(int i = 0; i < val; i++) {
+                    for(int i = 0; i < SubNo; i++) {
                         new MakeRequestTaskFirst(mCredential,obj[i]).execute();
                     }
                 }
@@ -153,6 +136,20 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    private void getResults() {
+        if (isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (isDeviceOnline()) {
+            DispEvent.setText("No network connection available.");
+        } else {
+            new MakeRequestTaskSecond(mCredential).execute();
+        }
+    }
+
 
 
     /**
@@ -211,7 +208,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    T.setText(
+                    DispEvent.setText(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -416,7 +413,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         @Override
         protected void onPreExecute() {
-            T.setText("");
+            DispEvent.setText("");
             mProgress.show();
         }
 
@@ -425,13 +422,13 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                T.setText("No Events Found");
+                DispEvent.setText("No Events Found");
                 Toast.makeText(EventActivity.this, "No Events Found",
                         Toast.LENGTH_SHORT).show();
 
             } else {
                 output.add(0, "Events Retrieved.,");
-               T.setText(TextUtils.join("\n", output));
+               DispEvent.setText(TextUtils.join("\n", output));
                 Toast.makeText(EventActivity.this, "Events Retrieved",
                         Toast.LENGTH_SHORT).show();
 
@@ -452,11 +449,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                   T.setText("The following error occurred:\n"
+                   DispEvent.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                T.setText("Request cancelled.");
+                DispEvent.setText("Request cancelled.");
             }
         }
     }

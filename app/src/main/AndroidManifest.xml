@@ -33,7 +33,7 @@
         <!-- [END fcm_default_channel] -->
         //---------------CLOUD MESSAGING------------------//
         <activity
-            android:name="com.boss.buddy.MainActivity"
+            android:name="com.boss.buddy.MainMenu"
             android:launchMode="singleInstance" />
         <activity
             android:name="com.boss.buddy.CalendarEvent.EventActivity"
