@@ -120,10 +120,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         obj[i].setSummary((String) dataSnapshot.child("sub"+i).child("name").getValue());
                         obj[i].setStartingDate((String) dataSnapshot.child("sub"+i).child("start").getValue());
                         obj[i].setEndingDate((String) dataSnapshot.child("sub"+i).child("end").getValue());
-                    }
 
-                    for(int i = 0; i < SubNo; i++) {
-                        new MakeRequestTaskFirst(mCredential,obj[i]).execute();
+                        new SetEventTask(mCredential,obj[i]).execute();//obj passed as parameter
                     }
                 }
 
@@ -146,7 +144,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (isDeviceOnline()) {
             DispEvent.setText("No network connection available.");
         } else {
-            new MakeRequestTaskSecond(mCredential).execute();
+            new getEventTask(mCredential).execute();
         }
     }
 
@@ -345,134 +343,24 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         dialog.show();
     }
 
-    /**
-     * An asynchronous task that handles the Google Calendar API call.
-     * Placing the API calls in their own task ensures the UI stays responsive.
-     */
-    @SuppressLint("StaticFieldLeak")
-    public class MakeRequestTaskSecond extends AsyncTask<Void, Void, List<String>> {
-         com.google.api.services.calendar.Calendar mService;
-        private Exception mLastError = null;
-
-        MakeRequestTaskSecond(GoogleAccountCredential credential) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-             mService = new com.google.api.services.calendar.Calendar.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("com.example.krypton.calender")
-                    .build();
-
-        }
 
 
-
-        /**
-         * Background task to call Google Calendar API.
-         * @param params no parameters needed for this task.
-         */
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                return getDataFromApi();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        /**
-         * Fetch a list of the next 10 events from the primary calendar.
-         * @return List of Strings describing returned events.
-         */
-        private List<String> getDataFromApi() throws IOException {
-            // List the next 30 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<>();
-            Events events = mService.events().list("primary")
-                    .setMaxResults(30)
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
-            List<Event> items = events.getItems();
-
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-            return eventStrings;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            DispEvent.setText("");
-            mProgress.show();
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(List<String> output) {
-            mProgress.hide();
-            if (output == null || output.size() == 0) {
-                DispEvent.setText("No Events Found");
-                Toast.makeText(EventActivity.this, "No Events Found",
-                        Toast.LENGTH_SHORT).show();
-
-            } else {
-                output.add(0, "Events Retrieved.,");
-               DispEvent.setText(TextUtils.join("\n", output));
-                Toast.makeText(EventActivity.this, "Events Retrieved",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onCancelled() {
-            mProgress.hide();
-            if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            EventActivity.REQUEST_AUTHORIZATION);
-                } else {
-                   DispEvent.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
-                }
-            } else {
-                DispEvent.setText("Request cancelled.");
-            }
-        }
-    }
-
-    //-----------------EVENT CREATION---------------//
+    //-----------------EVENT CREATION TASK-----------------------------------------------------------------------------------------//
 
     @SuppressLint("StaticFieldLeak")
-    public class MakeRequestTaskFirst extends AsyncTask<Void, Void, List<String>> {
+    public class SetEventTask extends AsyncTask<Void, Void, List<String>> {
         com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
-        String summary;
-        String start;
-        String end;
-        MakeRequestTaskFirst(GoogleAccountCredential credential, SubjectDetails obj) {
+        private String summary;
+        private String start;
+        private String end;
+
+        SetEventTask(GoogleAccountCredential credential, SubjectDetails obj) { //parameterized constructor
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("com.example.krypton.calender")
+                    .setApplicationName("com.boss.buddy")
                     .build();
             summary=obj.getSummary();
             start=obj.getStartingDate();
@@ -480,11 +368,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         }
 
 
-
-        /**
-         * Background task to call Google Calendar API.
-         * @param params no parameters needed for this task.
-         */
         @Override
         protected List<String> doInBackground(Void... params) {
             try {
@@ -498,13 +381,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         @Override
         protected void onProgressUpdate(Void... values) {
-
         }
-
-        /**
-         * Fetch a list of the next 10 events from the primary calendar.
-         * @return List of Strings describing returned events.
-         */
         private List<String> setEvent() {
 
                 Event event = new Event()
@@ -528,9 +405,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         .setOverrides(Arrays.asList(reminderOverrides));
                 event.setReminders(reminders);
 
-                String calendarId = "primary";
                    try {
-                     mService.events().insert(calendarId, event).execute();
+                     mService.events().insert("primary", event).execute();
                  } catch (IOException e) {
                      e.printStackTrace();
                   }
@@ -570,11 +446,118 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventActivity.this, "Request Failed.", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+//-------------------------------EVENT LISTING TASK --------------------------------------------------------------------------------------------//
+    /**
+     * An asynchronous task that handles the Google Calendar API call.
+     * Placing the API calls in their own task ensures the UI stays responsive.
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class getEventTask extends AsyncTask<Void, Void, List<String>> {
+        com.google.api.services.calendar.Calendar mService;
+        private Exception mLastError = null;
+
+        getEventTask(GoogleAccountCredential credential) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("com.boss.buddy")
+                    .build();
+
+        }
+
+
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            try {
+                return getEvent();
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        private List<String> getEvent() throws IOException {
+            // List the next 30 events from the primary calendar.
+            DateTime now = new DateTime(System.currentTimeMillis());
+            List<String> eventStrings = new ArrayList<>();
+            Events events = mService.events().list("primary")
+                    .setMaxResults(30)
+                    .setTimeMin(now)
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+            List<Event> items = events.getItems();
+
+            for (Event event : items) {
+                DateTime start = event.getStart().getDateTime();
+                if (start == null) {
+                    start = event.getStart().getDate();
+                }
+                eventStrings.add(
+                        String.format("%s (%s)", event.getSummary(), start));
+            }
+            return eventStrings;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            DispEvent.setText("");
+            mProgress.show();
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(List<String> output) {
+            mProgress.hide();
+            if (output == null || output.size() == 0) {
+                DispEvent.setText("No Events Found");
+                Toast.makeText(EventActivity.this, "No Events Found",
+                        Toast.LENGTH_SHORT).show();
+
+            } else {
+                output.add(0, "Events Retrieved.,");
+                DispEvent.setText(TextUtils.join("\n", output));
+                Toast.makeText(EventActivity.this, "Events Retrieved",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onCancelled() {
+            mProgress.hide();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            EventActivity.REQUEST_AUTHORIZATION);
+                } else {
+                    DispEvent.setText("The following error occurred:\n"
+                            + mLastError.getMessage());
+                }
+            } else {
+                DispEvent.setText("Request cancelled.");
+            }
+        }
+    }
 }
 
 class SubjectDetails

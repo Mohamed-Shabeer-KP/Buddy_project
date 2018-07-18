@@ -66,18 +66,11 @@ public class RemoteConfigActivity extends AppCompatActivity {
                         }
 
                         FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_AVAILABLE"));
-                        FLAG_SCHEDULE_FINISHED =  Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
+                        FLAG_SCHEDULE_FINISHED = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
 
                     }
                 });
-
     }
-
-
-
-
-
-
     }
 
 
