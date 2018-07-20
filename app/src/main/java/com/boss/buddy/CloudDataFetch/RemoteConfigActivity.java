@@ -61,12 +61,13 @@ public class RemoteConfigActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(RemoteConfigActivity.this, "Fetch Succeeded", Toast.LENGTH_SHORT).show();
                             mFirebaseRemoteConfig.activateFetched();
+                            FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_AVAILABLE"));
+                            FLAG_SCHEDULE_FINISHED = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
+
                         } else {
                             Toast.makeText(RemoteConfigActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
 
-                        FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_AVAILABLE"));
-                        FLAG_SCHEDULE_FINISHED = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
 
                     }
                 });

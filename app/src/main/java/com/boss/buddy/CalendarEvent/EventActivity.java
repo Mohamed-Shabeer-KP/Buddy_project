@@ -427,6 +427,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             Toast.makeText(EventActivity.this, "Event Update Succeeded",
                     Toast.LENGTH_SHORT).show();
             getResults();
+
         }
 
         @Override

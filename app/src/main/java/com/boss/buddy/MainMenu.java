@@ -37,6 +37,11 @@ public class MainMenu extends AppCompatActivity {
         FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
         FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
+        if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
+        {
+            Toast.makeText(this, "INTERNET CONNECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
+        }
+
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
@@ -83,7 +88,7 @@ public class MainMenu extends AppCompatActivity {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(250, 100, 30, 0);
                 ScheduleButton = new Button(this);
-                ScheduleButton.setText("SHOW EXAM SCHEDULE");
+                ScheduleButton.setText("SHOW SCHEDULE");
                 ScheduleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
