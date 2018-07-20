@@ -39,6 +39,7 @@ public class MainMenu extends AppCompatActivity {
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
+            setContentView(R.layout.activity_main);
             Toast.makeText(this, "INTERNET CONNECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
         }
 
