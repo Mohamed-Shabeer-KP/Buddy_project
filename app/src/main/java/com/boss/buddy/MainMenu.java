@@ -59,7 +59,7 @@ public class MainMenu extends AppCompatActivity {
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0)
             {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(250, 100, 30, 0);
+                layoutParams.setMargins(475, 350, 0, 0);
                 ScheduleButton = new Button(this);
                 ScheduleButton.setText("SCHEDULE EXAM");
                 final SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
@@ -87,7 +87,7 @@ public class MainMenu extends AppCompatActivity {
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(250, 100, 30, 0);
+                layoutParams.setMargins(475, 350, 0, 0);
                 ScheduleButton = new Button(this);
                 ScheduleButton.setText("SHOW SCHEDULE");
                 ScheduleButton.setOnClickListener(new View.OnClickListener() {

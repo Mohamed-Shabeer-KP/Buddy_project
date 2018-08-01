@@ -503,11 +503,15 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
+                DateTime end =event.getEnd().getDateTime();
                 if (start == null) {
                     start = event.getStart().getDate();
                 }
+
+                
+
                 eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
+                        String.format("%s (%s)(%s)", event.getSummary(), start,end));
             }
             return eventStrings;
         }
@@ -530,7 +534,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
             } else {
                 output.add(0, "Events Retrieved.,");
-                DispEvent.setText(TextUtils.join("\n", output));
+
+                DispEvent.setText(TextUtils.join("\n", output)); //event display
+
                 Toast.makeText(EventActivity.this, "Events Retrieved",
                         Toast.LENGTH_SHORT).show();
 
