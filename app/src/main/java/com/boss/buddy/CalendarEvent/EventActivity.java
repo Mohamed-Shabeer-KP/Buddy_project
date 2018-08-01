@@ -10,12 +10,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -508,10 +512,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     start = event.getStart().getDate();
                 }
 
-                
-
                 eventStrings.add(
-                        String.format("%s (%s)(%s)", event.getSummary(), start,end));
+                        String.format("%s%s%s", event.getSummary(), start,end));
             }
             return eventStrings;
         }
@@ -535,7 +537,36 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             } else {
                 output.add(0, "Events Retrieved.,");
 
-                DispEvent.setText(TextUtils.join("\n", output)); //event display
+                TableLayout stk = (TableLayout) findViewById(R.id.tb);
+                TableRow tbrow0 = new TableRow(getApplicationContext());
+                TextView tv0 = new TextView(getApplicationContext());
+                tv0.setText(" Sl.No ");
+                tv0.setTextColor(Color.WHITE);
+                tbrow0.addView(tv0);
+                TextView tv1 = new TextView(getApplicationContext());
+                tv1.setText(" Product ");
+                tv1.setTextColor(Color.WHITE);
+                tbrow0.addView(tv1);
+
+                stk.addView(tbrow0);
+                for (int i = 0; i < 25; i++) {
+                    TableRow tbrow = new TableRow(getApplicationContext());
+                    TextView t1v = new TextView(getApplicationContext());
+                    t1v.setText("" + i);
+                    t1v.setTextColor(Color.WHITE);
+                    t1v.setGravity(Gravity.CENTER);
+                    tbrow.addView(t1v);
+                    TextView t2v = new TextView(getApplicationContext());
+                    t2v.setText("Product " + i);
+                    t2v.setTextColor(Color.WHITE);
+                    t2v.setGravity(Gravity.CENTER);
+                    tbrow.addView(t2v);
+
+                    stk.addView(tbrow);
+                }
+
+
+                Toast.makeText(EventActivity.this, output.get(1), Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(EventActivity.this, "Events Retrieved",
                         Toast.LENGTH_SHORT).show();
