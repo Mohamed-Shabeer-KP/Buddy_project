@@ -10,5 +10,6 @@
     <color name="blue_grey_700">#455A64</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
+    <color name="background_material_light">#ffffff</color>
     \\---------------------CLOUDMESSAGING--------------\\
 </resources>

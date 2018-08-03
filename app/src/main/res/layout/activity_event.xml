@@ -5,14 +5,22 @@
 
     <TextView
         android:id="@+id/T1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_width="252dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="25dp"
         android:text="@string/load"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="14dp" />
+        android:textColor="#ff0000" />
+
+    <TableLayout
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="237dp"
+        android:padding="8dp"
+
+        />
+
 
 </RelativeLayout>

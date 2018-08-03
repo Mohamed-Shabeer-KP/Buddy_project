@@ -18,11 +18,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -512,8 +514,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     start = event.getStart().getDate();
                 }
 
-                eventStrings.add(
-                        String.format("%s%s%s", event.getSummary(), start,end));
+                eventStrings.add(String.format("%s%s%s", event.getSummary(), start,end));
             }
             return eventStrings;
         }
@@ -537,35 +538,62 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             } else {
                 output.add(0, "Events Retrieved.,");
 
-                TableLayout stk = (TableLayout) findViewById(R.id.tb);
-                TableRow tbrow0 = new TableRow(getApplicationContext());
-                TextView tv0 = new TextView(getApplicationContext());
-                tv0.setText(" Sl.No ");
-                tv0.setTextColor(Color.WHITE);
-                tbrow0.addView(tv0);
-                TextView tv1 = new TextView(getApplicationContext());
-                tv1.setText(" Product ");
-                tv1.setTextColor(Color.WHITE);
-                tbrow0.addView(tv1);
+                String event,subject,date,start,end;
+                int pos;
+                event=output.get(1);
+                pos=event.indexOf("2",0);
+                subject=event.substring(0,pos);
+                date=event.substring(pos,pos+10);
+                start=event.substring(pos+11,pos+19);
+                end=event.substring(pos+40,pos+48);
+                TableLayout table = findViewById(R.id.tb);
 
-                stk.addView(tbrow0);
-                for (int i = 0; i < 25; i++) {
-                    TableRow tbrow = new TableRow(getApplicationContext());
-                    TextView t1v = new TextView(getApplicationContext());
-                    t1v.setText("" + i);
-                    t1v.setTextColor(Color.WHITE);
-                    t1v.setGravity(Gravity.CENTER);
-                    tbrow.addView(t1v);
-                    TextView t2v = new TextView(getApplicationContext());
-                    t2v.setText("Product " + i);
-                    t2v.setTextColor(Color.WHITE);
-                    t2v.setGravity(Gravity.CENTER);
-                    tbrow.addView(t2v);
 
-                    stk.addView(tbrow);
+                for(int i =0 ;i<1;i++) {
+                    TableRow tr = new TableRow(getApplicationContext());
+                    tr.setBackgroundColor(Color.WHITE);
+                    tr.setPadding(0, 0, 0, 0); //Border between rows
+                    TableRow.LayoutParams llp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+                    llp.setMargins(10, 10, 10, 10);//2px right-margin
+
+                    LinearLayout cell1 = new LinearLayout(getApplicationContext());
+                    cell1.setBackgroundColor(Color.BLACK);
+                    cell1.setLayoutParams(llp);//2px border on the right for the cell
+
+                    LinearLayout cell2 = new LinearLayout(getApplicationContext());
+                    cell2.setBackgroundColor(Color.BLACK);
+                    cell2.setLayoutParams(llp);//2px border on the right for the cell
+
+                LinearLayout cell3 = new LinearLayout(getApplicationContext());
+                cell3.setBackgroundColor(Color.BLACK);
+                cell3.setLayoutParams(llp);//2px border on the right for the cell
+
+                  TextView t1 = new TextView(getApplicationContext());
+                    t1.setText(subject);
+                    t1.setTextColor(Color.WHITE);
+                    t1.setPadding(0, 0, 4, 3);
+
+                TextView t2 = new TextView(getApplicationContext());
+                t2.setText(date);
+                t2.setTextColor(Color.WHITE);
+                t2.setPadding(9, 0, 4, 3);
+
+                TextView t3 = new TextView(getApplicationContext());
+                t3.setText(start);
+                t3.setTextColor(Color.WHITE);
+                t3.setPadding(9, 0, 4, 3);
+
+                    cell1.addView(t1);
+                cell2.addView(t2);cell3.addView(t3);
+
+                    tr.addView(cell1);
+                tr.addView(cell2);
+                tr.addView(cell3);
+
+//add as many cells you want to a row, using the same approach
+
+                    table.addView(tr);
                 }
-
-
                 Toast.makeText(EventActivity.this, output.get(1), Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(EventActivity.this, "Events Retrieved",
