@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenu"
-    android:id="@+id/mainlayout"
-    android:background="@drawable/bbg">
-
+    android:id="@+id/mainlayout">
+   <!-- android:background="@drawable/bbg">
+-->
 </RelativeLayout>
