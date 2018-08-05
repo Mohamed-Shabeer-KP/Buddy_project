@@ -16,6 +16,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -523,7 +524,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mProgress.show();
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "NewApi"})
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -535,13 +536,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             } else {
                 DispEvent.setText( "Events Retrieved.,");
                 TableLayout table = findViewById(R.id.tb);
-
+                table.setVisibility(View.VISIBLE);
                 for(int i=0;i<output.size();i++) {
                     TableRow tr = new TableRow(getApplicationContext());
-                    tr.setBackgroundColor(Color.WHITE);
-                    tr.setPadding(0, 0, 0, 0); //Border between rows
-                    TableRow.LayoutParams llp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-                    llp.setMargins(10, 10, 10, 10);//2px right-margin
 
                     String event;
                     String event_details[] = new String[4];
@@ -555,14 +552,13 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                     for (int j = 0; j < 4; j++) {
                         LinearLayout cell = new LinearLayout(getApplicationContext());
-                        cell.setBackgroundColor(Color.BLACK);
-                        cell.setLayoutParams(llp);//2px border on the right for the cell
-
+                        cell.setPadding(7,7,7,7);//2px border on the right for the cell
+                        cell.setBackground(getDrawable(R.drawable.cellborder));
 
                         TextView t = new TextView(getApplicationContext());
                         t.setText(event_details[j]);
-                        t.setTextColor(Color.WHITE);
-                        t.setPadding(0, 0, 4, 3);
+                        t.setTextColor(Color.BLACK);
+                        t.setTextSize(10);
 
                         cell.addView(t);
                         tr.addView(cell);
