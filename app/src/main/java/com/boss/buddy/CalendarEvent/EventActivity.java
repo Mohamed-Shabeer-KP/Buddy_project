@@ -23,6 +23,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -68,6 +69,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private int Flag;
     private int SubNo;
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "dw", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(),MainMenu.class));
+    }
+
     /**
      * Create the main activity.
      * @param savedInstanceState previously saved instance data.
@@ -93,6 +100,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             setEvents();
         else
             getResults();
+
+
     }
 
     /**
@@ -127,6 +136,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                         new SetEventTask(mCredential,obj[i]).execute();//obj passed as parameter
                     }
+                    getResults();
+
                 }
 
                 @Override
@@ -217,7 +228,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     if(Flag==1)
                         getResults();
                     else
-                    setEvents();
+                        setEvents();
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -244,7 +255,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     if(Flag==1)
                         getResults();
                     else
-                    setEvents();
+                         setEvents();
                 }
                 break;
         }
@@ -430,7 +441,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mProgress.hide();
             Toast.makeText(EventActivity.this, "Event Update Succeeded",
                     Toast.LENGTH_SHORT).show();
-            getResults();
 
         }
 
@@ -552,7 +562,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                     for (int j = 0; j < 4; j++) {
                         LinearLayout cell = new LinearLayout(getApplicationContext());
-                        cell.setPadding(7,7,7,7);//2px border on the right for the cell
+                        cell.setPadding(7,7,7,7);
                         cell.setBackground(getDrawable(R.drawable.cellborder));
 
                         TextView t = new TextView(getApplicationContext());
@@ -565,11 +575,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     }
                     table.addView(tr);
                 }
-
-
-
-                Toast.makeText(EventActivity.this, output.get(1), Toast.LENGTH_SHORT).show();
-
                 Toast.makeText(EventActivity.this, "Events Retrieved",
                         Toast.LENGTH_SHORT).show();
 
