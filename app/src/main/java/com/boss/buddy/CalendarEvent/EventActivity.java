@@ -16,15 +16,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -526,7 +524,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mProgress.show();
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "NewApi"})
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -536,64 +534,40 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         Toast.LENGTH_SHORT).show();
 
             } else {
-                output.add(0, "Events Retrieved.,");
-
-                String event,subject,date,start,end;
-                int pos;
-                event=output.get(1);
-                pos=event.indexOf("2",0);
-                subject=event.substring(0,pos);
-                date=event.substring(pos,pos+10);
-                start=event.substring(pos+11,pos+19);
-                end=event.substring(pos+40,pos+48);
+                DispEvent.setText( "Events Retrieved.,");
                 TableLayout table = findViewById(R.id.tb);
-
-
-                for(int i =0 ;i<1;i++) {
+                table.setVisibility(View.VISIBLE);
+                for(int i=0;i<output.size();i++) {
                     TableRow tr = new TableRow(getApplicationContext());
-                    tr.setBackgroundColor(Color.WHITE);
-                    tr.setPadding(0, 0, 0, 0); //Border between rows
-                    TableRow.LayoutParams llp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-                    llp.setMargins(10, 10, 10, 10);//2px right-margin
 
-                    LinearLayout cell1 = new LinearLayout(getApplicationContext());
-                    cell1.setBackgroundColor(Color.BLACK);
-                    cell1.setLayoutParams(llp);//2px border on the right for the cell
+                    String event;
+                    String event_details[] = new String[4];
+                    int pos;
+                    event = output.get(i);
+                    pos = event.indexOf("2", 0);
+                    event_details[0] = event.substring(0, pos);
+                    event_details[1] = event.substring(pos, pos + 10);
+                    event_details[2] = event.substring(pos + 11, pos + 19);
+                    event_details[3] = event.substring(pos + 40, pos + 48);
 
-                    LinearLayout cell2 = new LinearLayout(getApplicationContext());
-                    cell2.setBackgroundColor(Color.BLACK);
-                    cell2.setLayoutParams(llp);//2px border on the right for the cell
+                    for (int j = 0; j < 4; j++) {
+                        LinearLayout cell = new LinearLayout(getApplicationContext());
+                        cell.setPadding(7,7,7,7);//2px border on the right for the cell
+                        cell.setBackground(getDrawable(R.drawable.cellborder));
 
-                LinearLayout cell3 = new LinearLayout(getApplicationContext());
-                cell3.setBackgroundColor(Color.BLACK);
-                cell3.setLayoutParams(llp);//2px border on the right for the cell
+                        TextView t = new TextView(getApplicationContext());
+                        t.setText(event_details[j]);
+                        t.setTextColor(Color.BLACK);
+                        t.setTextSize(10);
 
-                  TextView t1 = new TextView(getApplicationContext());
-                    t1.setText(subject);
-                    t1.setTextColor(Color.WHITE);
-                    t1.setPadding(0, 0, 4, 3);
-
-                TextView t2 = new TextView(getApplicationContext());
-                t2.setText(date);
-                t2.setTextColor(Color.WHITE);
-                t2.setPadding(9, 0, 4, 3);
-
-                TextView t3 = new TextView(getApplicationContext());
-                t3.setText(start);
-                t3.setTextColor(Color.WHITE);
-                t3.setPadding(9, 0, 4, 3);
-
-                    cell1.addView(t1);
-                cell2.addView(t2);cell3.addView(t3);
-
-                    tr.addView(cell1);
-                tr.addView(cell2);
-                tr.addView(cell3);
-
-//add as many cells you want to a row, using the same approach
-
+                        cell.addView(t);
+                        tr.addView(cell);
+                    }
                     table.addView(tr);
                 }
+
+
+
                 Toast.makeText(EventActivity.this, output.get(1), Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(EventActivity.this, "Events Retrieved",

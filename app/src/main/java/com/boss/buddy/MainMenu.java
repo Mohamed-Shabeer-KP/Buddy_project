@@ -20,7 +20,6 @@ import com.boss.buddy.CalendarEvent.EventActivity;
 
 public class MainMenu extends AppCompatActivity {
     boolean exit = false;
-    private Button ScheduleButton;
     private int FLAG_AVAILABLE;
     private int FLAG_FINISHED;
 
@@ -30,12 +29,14 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RelativeLayout mainLayout = findViewById(R.id.mainlayout);
 
         Bundle B = getIntent().getExtras();
         assert B != null;
         FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
         FLAG_FINISHED = B.getInt("FLAG_FINISHED");
+
+        Button scheduleButton = findViewById(R.id.bshedule);
+        scheduleButton.setVisibility(View.INVISIBLE);
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
@@ -58,16 +59,13 @@ public class MainMenu extends AppCompatActivity {
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0)
             {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(475, 350, 0, 0);
-                ScheduleButton = new Button(this);
-                ScheduleButton.setText("SCHEDULE EXAM");
+                scheduleButton.setText("SET SCHEDULE");
+                scheduleButton.setVisibility(View.VISIBLE);
+
                 final SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
-                ScheduleButton.setOnClickListener(new View.OnClickListener() {
+                scheduleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        ScheduleButton.setEnabled(false);
 
                         SharedPreferences.Editor editor = SPW.edit();
                         editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
@@ -79,32 +77,26 @@ public class MainMenu extends AppCompatActivity {
                         Show.putExtras(BShow);
                         startActivity(Show);
 
-                        ScheduleButton.setEnabled(true);
                     }
                 });
-                mainLayout.addView(ScheduleButton, layoutParams);
+
             }
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(475, 350, 0, 0);
-                ScheduleButton = new Button(this);
-                ScheduleButton.setText("SHOW SCHEDULE");
-                ScheduleButton.setOnClickListener(new View.OnClickListener() {
+                scheduleButton.setText("SHOW SCHEDULE");
+                scheduleButton.setVisibility(View.VISIBLE);
+
+                scheduleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        ScheduleButton.setEnabled(false);
-
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
                         Bundle BShow=new Bundle();
                         BShow.putInt("flag",1);
                         Show.putExtras(BShow);
                         startActivity(Show);
-                        ScheduleButton.setEnabled(true);
                     }
                 });
-                mainLayout.addView(ScheduleButton, layoutParams);
+
             }
 
 
