@@ -24,6 +24,7 @@ public class MainMenu extends AppCompatActivity {
     private int FLAG_FINISHED;
 
 
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class MainMenu extends AppCompatActivity {
         FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
         Button scheduleButton = findViewById(R.id.bshedule);
-        scheduleButton.setVisibility(View.INVISIBLE);
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
@@ -52,20 +52,24 @@ public class MainMenu extends AppCompatActivity {
             editor.apply();
         }
 
-        SharedPreferences SPR = this.getPreferences(Context.MODE_PRIVATE);
-        int DefaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-        int SCHEDULE_DONE = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
+            SharedPreferences SPR = this.getPreferences(Context.MODE_PRIVATE);
+            int DefaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
+            int SCHEDULE_DONE = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
 
 
-        if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0)
+
+        if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
                 scheduleButton.setText("SET SCHEDULE");
                 scheduleButton.setVisibility(View.VISIBLE);
+
+
 
                 final SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
                 scheduleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
 
                         SharedPreferences.Editor editor = SPW.edit();
                         editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
@@ -79,7 +83,6 @@ public class MainMenu extends AppCompatActivity {
 
                     }
                 });
-
             }
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
