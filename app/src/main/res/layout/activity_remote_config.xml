@@ -9,7 +9,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/splash_backgrnd"/>
+        android:background="@drawable/splash"/>
+    <!--android:background="@drawable/splash_backgrnd"-->
 
 
 </RelativeLayout>

@@ -570,7 +570,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         TextView t = new TextView(getApplicationContext());
                         t.setText(event_details[j]);
                         t.setTextColor(Color.BLACK);
-                        t.setTextSize(10);
+                        t.setTextSize(14);
 
                         cell.addView(t);
                         tr.addView(cell);

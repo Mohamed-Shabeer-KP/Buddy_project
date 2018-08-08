@@ -8,9 +8,16 @@
    <!-- android:background="@drawable/bbg">
 -->
    <Button
-       android:id="@+id/bshedule"
-       android:layout_width="wrap_content"
+       android:textColor="#ffffff"
+       android:textSize="17sp"
+
+       android:textStyle="italic"
+       android:layout_width="160dp"
        android:layout_height="wrap_content"
+       android:background="@drawable/button_design1"
+       android:shadowColor="#A8A8A8"
+       android:shadowRadius="5"
+       android:id="@+id/bshedule"
        android:layout_alignParentTop="true"
        android:layout_centerHorizontal="true"
        android:layout_marginTop="111dp"
