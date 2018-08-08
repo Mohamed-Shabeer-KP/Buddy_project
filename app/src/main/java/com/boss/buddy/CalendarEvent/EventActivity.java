@@ -5,7 +5,9 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -69,10 +72,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private int Flag;
     private int SubNo;
 
+
     @Override
-    public void onBackPressed() {
-        Toast.makeText(this, "dw", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(),MainMenu.class));
+    public void onBackPressed()
+    {
+        System.exit(0);
     }
 
     /**
@@ -100,7 +104,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             setEvents();
         else
             getResults();
-
 
     }
 
@@ -137,12 +140,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         new SetEventTask(mCredential,obj[i]).execute();//obj passed as parameter
                     }
                     getResults();
-
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA .,PLEASE RELOAD APP AGAIN", Toast.LENGTH_SHORT).show();
                 }
 
             });
@@ -544,7 +546,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         Toast.LENGTH_SHORT).show();
 
             } else {
-                DispEvent.setText( "Events Retrieved.,");
+                DispEvent.setText( "EVENTS RETRIEVED");
                 TableLayout table = findViewById(R.id.tb);
                 table.setVisibility(View.VISIBLE);
                 for(int i=0;i<output.size();i++) {

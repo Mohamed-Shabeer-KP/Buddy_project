@@ -41,38 +41,34 @@ public class MainMenu extends AppCompatActivity {
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
             setContentView(R.layout.activity_main);
-            Toast.makeText(this, "INTERNET CONNECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, " FAILED TO CONNECT TO INTERNET", Toast.LENGTH_SHORT).show();
         }
 
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
-            editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
+            editor.putInt(getString(R.string.StoredValue), 0);
             editor.apply();
         }
 
-            SharedPreferences SPR = this.getPreferences(Context.MODE_PRIVATE);
-            int DefaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-            int SCHEDULE_DONE = SPR.getInt(getString(R.string.StoredValue), DefaultValue);
-
-
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
+        int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
                 scheduleButton.setText("SET SCHEDULE");
                 scheduleButton.setVisibility(View.VISIBLE);
 
-
-
-                final SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
                 scheduleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
-                        SharedPreferences.Editor editor = SPW.edit();
-                        editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
+                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt(getString(R.string.StoredValue), 1);
                         editor.apply();
 
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
@@ -121,7 +117,7 @@ public class MainMenu extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (exit) {
-            finish(); // finish activity
+            System.exit(0);
         } else {
             Toast.makeText(this, "Onooode Alojichitu Pore",
                     Toast.LENGTH_SHORT).show();

@@ -11,7 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Buddy_Theme_Main">
 
         //---------------CLOUD MESSAGING----------------//
         <meta-data
@@ -31,11 +31,14 @@
 
         <activity
             android:name="com.boss.buddy.MainMenu"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"/>
+
         <activity
             android:name="com.boss.buddy.CalendarEvent.EventActivity"
             android:launchMode="singleInstance" />
-        <activity android:name="com.boss.buddy.CloudDataFetch.RemoteConfigActivity">
+        <activity android:name="com.boss.buddy.CloudDataFetch.RemoteConfigActivity"
+            android:theme="@style/Buddy_Theme_Splash" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
