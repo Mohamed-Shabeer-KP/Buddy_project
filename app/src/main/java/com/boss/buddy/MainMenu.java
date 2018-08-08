@@ -117,7 +117,7 @@ public class MainMenu extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (exit) {
-            finish(); // finish activity
+            System.exit(0);
         } else {
             Toast.makeText(this, "Onooode Alojichitu Pore",
                     Toast.LENGTH_SHORT).show();

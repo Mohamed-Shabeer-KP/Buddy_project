@@ -45,7 +45,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
                 startActivity(StartMain);
                 finish();
             }
-        },4000);
+        },5000);
     }
 
     private void fetchValues() {

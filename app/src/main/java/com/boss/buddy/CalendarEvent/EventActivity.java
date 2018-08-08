@@ -74,12 +74,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
 
     @Override
-    public void onBackPressed() {
-        Intent mStartActivity = new Intent(getApplicationContext(), MainMenu.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 10, mPendingIntent);
+    public void onBackPressed()
+    {
         System.exit(0);
     }
 
