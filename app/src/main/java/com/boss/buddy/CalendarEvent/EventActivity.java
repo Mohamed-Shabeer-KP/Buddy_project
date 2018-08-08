@@ -105,7 +105,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         else
             getResults();
 
-
     }
 
     /**
@@ -145,7 +144,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA .,PLEASE RELOAD APP AGAIN", Toast.LENGTH_SHORT).show();
                 }
 
             });
@@ -547,7 +546,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         Toast.LENGTH_SHORT).show();
 
             } else {
-                DispEvent.setText( "Events Retrieved.,");
+                DispEvent.setText( "EVENTS RETRIEVED");
                 TableLayout table = findViewById(R.id.tb);
                 table.setVisibility(View.VISIBLE);
                 for(int i=0;i<output.size();i++) {

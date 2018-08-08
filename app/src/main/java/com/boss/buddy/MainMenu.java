@@ -41,17 +41,17 @@ public class MainMenu extends AppCompatActivity {
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
             setContentView(R.layout.activity_main);
-            Toast.makeText(this, "INTERNET CONNECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, " FAILED TO CONNECT TO INTERNET", Toast.LENGTH_SHORT).show();
         }
 
 
-      /*  if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
+        if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
-            editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
+            editor.putInt(getString(R.string.StoredValue), 0);
             editor.apply();
         }
-*/
+
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
         int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
@@ -68,7 +68,7 @@ public class MainMenu extends AppCompatActivity {
 
                         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putInt(getString(R.string.StoredValue), FLAG_AVAILABLE);
+                        editor.putInt(getString(R.string.StoredValue), 1);
                         editor.apply();
 
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);

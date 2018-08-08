@@ -11,7 +11,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Buddy_Theme" parent="Theme.AppCompat.Light.NoActionBar" />
-
+    <style name="Buddy_Theme_Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="Buddy_Theme_Main" parent="Theme.AppCompat.Light.DarkActionBar" >
+        <item name="colorPrimary">@android:color/holo_blue_dark</item>
+        <item name="colorAccent">@android:color/holo_blue_light</item>
+    </style>
 
 </resources>
