@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".MainMenu"
     android:id="@+id/mainlayout">
-   <!-- android:background="@drawable/bbg">
--->
+ <!--  android:background="@drawable/main"-->
    <Button
        android:textColor="#ffffff"
        android:textSize="17sp"
 
-       android:textStyle="italic"
        android:layout_width="160dp"
        android:layout_height="wrap_content"
        android:background="@drawable/button_design1"

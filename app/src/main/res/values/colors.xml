@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#000000</color>
 
     \\---------------------CLOUD MESSAGING--------------\\
     <color name="blue_grey_500">#607d8b</color>
-    <color name="blue_grey_600">#546E7A</color>
+    <color name="blue_grey_600">#0be6d7</color>
     <color name="blue_grey_700">#455A64</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
     <color name="background_material_light">#ffffff</color>
     <color name="primary_material_dark">#3f51b5</color>
     <color name="primary_dark_material_dark">#ffffff</color>
+    <color name="holo_blue_dark">#0ca6c9</color>
     \\---------------------CLOUDMESSAGING--------------\\
 </resources>
