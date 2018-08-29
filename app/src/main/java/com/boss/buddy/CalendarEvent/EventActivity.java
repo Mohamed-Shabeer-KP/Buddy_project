@@ -557,10 +557,10 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     int pos;
                     event = output.get(i);
                     pos = event.indexOf("2", 0);
-                    event_details[0] = event.substring(0, pos);
-                    event_details[1] = event.substring(pos, pos + 10);
-                    event_details[2] = event.substring(pos + 11, pos + 19);
-                    event_details[3] = event.substring(pos + 40, pos + 48);
+                    event_details[0] = " "+event.substring(0, pos)+" ";
+                    event_details[1] = " "+event.substring(pos, pos + 10)+" ";
+                    event_details[2] = " "+event.substring(pos + 11, pos + 19)+" ";
+                    event_details[3] = " "+event.substring(pos + 40, pos + 48)+" ";
 
                     for (int j = 0; j < 4; j++) {
                         LinearLayout cell = new LinearLayout(getApplicationContext());

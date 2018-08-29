@@ -7,19 +7,18 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/T1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/load"
@@ -27,11 +26,9 @@
 
             <TableLayout
                 android:id="@+id/tb"
-                android:layout_width="match_parent"
+                android:layout_width="429dp"
                 android:layout_height="match_parent"
 
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginTop="25dp"
                 android:baselineAligned="false"
                 android:padding="8dp"
@@ -39,8 +36,8 @@
                 android:visibility="invisible">
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_width="366dp"
+                    android:layout_height="178dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -49,12 +46,12 @@
 
                         <TextView
                             android:id="@+id/sublabel"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/cellborder"
                             android:padding="7dp"
-                            android:text="Subject" />
+                            android:text="SUBJECT                   " />
                     </LinearLayout>
 
                     <LinearLayout
@@ -64,12 +61,12 @@
 
                         <TextView
                             android:id="@+id/datelabel"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/cellborder"
                             android:padding="7dp"
-                            android:text="Date" />
+                            android:text="DATE  " />
                     </LinearLayout>
 
                     <LinearLayout
@@ -79,12 +76,12 @@
 
                         <TextView
                             android:id="@+id/startlabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:background="@drawable/cellborder"
                             android:padding="7dp"
-                            android:text="Start Time" />
+                            android:text="START TIME" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -94,12 +91,12 @@
 
                         <TextView
                             android:id="@+id/endlabel"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/cellborder"
                             android:padding="7dp"
-                            android:text="End Time" />
+                            android:text="END TIME  " />
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
