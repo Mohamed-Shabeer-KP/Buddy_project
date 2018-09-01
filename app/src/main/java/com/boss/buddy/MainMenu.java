@@ -46,6 +46,7 @@ public class MainMenu extends AppCompatActivity {
 
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
+            scheduleButton.setVisibility(View.INVISIBLE);
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
             editor.putInt(getString(R.string.StoredValue), 0);
