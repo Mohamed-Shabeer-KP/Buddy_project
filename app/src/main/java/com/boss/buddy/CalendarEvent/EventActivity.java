@@ -144,7 +144,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA .,PLEASE RELOAD APP AGAIN", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
                 }
 
             });
@@ -159,7 +159,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (isDeviceOnline()) {
-            DispEvent.setText("No network connection available.");
+            DispEvent.setText("Network connection not available.");
         } else {
             new getEventTask(mCredential).execute();
         }
@@ -403,7 +403,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 Event event = new Event()
                         .setSummary(summary)
-                        .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCE");
+                        .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCES");
                 DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);

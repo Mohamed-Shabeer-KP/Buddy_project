@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.boss.buddy.CalendarEvent.EventActivity;
+import com.boss.buddy.TimeTable.TimeTable;
 
 
 public class MainMenu extends AppCompatActivity {
@@ -37,6 +38,20 @@ public class MainMenu extends AppCompatActivity {
         FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
         Button scheduleButton = findViewById(R.id.bshedule);
+        Button timetableButton = findViewById(R.id.btimetable);
+
+        timetableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent Show=new Intent(getApplicationContext(), TimeTable.class);
+                Bundle BShow=new Bundle();
+                BShow.putInt("flag",0);
+                Show.putExtras(BShow);
+                startActivity(Show);
+
+            }
+        });
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
@@ -120,7 +135,7 @@ public class MainMenu extends AppCompatActivity {
         if (exit) {
             System.exit(0);
         } else {
-            Toast.makeText(this, "Onooode Alojichitu Pore",
+            Toast.makeText(this, "PRESS AGAIN TO EXIT",
                     Toast.LENGTH_SHORT).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {
