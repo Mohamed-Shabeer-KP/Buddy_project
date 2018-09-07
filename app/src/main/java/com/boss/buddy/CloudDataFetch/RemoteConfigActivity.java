@@ -5,13 +5,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.boss.buddy.BuildConfig;
 import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
+import com.boss.buddy.TimeTable.Class_Time_Table_activity;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -19,6 +27,8 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
     private int FLAG_SCHEDULE_AVAILABLE;
     private int FLAG_SCHEDULE_FINISHED;
+    private ImageView img;
+    private String url;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Override
@@ -34,6 +44,24 @@ public class RemoteConfigActivity extends AppCompatActivity {
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         fetchValues();
 
+
+        img = findViewById(R.id.splash_img);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Images");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                url = String.valueOf(dataSnapshot.child("splash").getValue());
+                Glide.with(getApplicationContext()).load(url).into(img);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(RemoteConfigActivity.this, "FAILED TO FETCH FILE, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -45,7 +73,9 @@ public class RemoteConfigActivity extends AppCompatActivity {
                 startActivity(StartMain);
                 finish();
             }
-        },5000);
+        },4000);
+
+
     }
 
     private void fetchValues() {
