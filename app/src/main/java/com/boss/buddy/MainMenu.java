@@ -12,11 +12,10 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.boss.buddy.CalendarEvent.EventActivity;
-import com.boss.buddy.TimeTable.TimeTable;
+import com.boss.buddy.TimeTable.Class_Time_Table_activity;
 
 
 public class MainMenu extends AppCompatActivity {
@@ -44,9 +43,8 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent Show=new Intent(getApplicationContext(), TimeTable.class);
+                Intent Show=new Intent(getApplicationContext(), Class_Time_Table_activity.class);
                 Bundle BShow=new Bundle();
-                BShow.putInt("flag",0);
                 Show.putExtras(BShow);
                 startActivity(Show);
 
