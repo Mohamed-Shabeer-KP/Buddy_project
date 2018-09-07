@@ -124,11 +124,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             DispEvent.setText("No network connection available.");
         } else {
 
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("subjects");
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Subjects");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("subno").getValue()));
+                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("SubNo").getValue()));
                     SubjectDetails[] obj=new SubjectDetails[SubNo];
                     for(int i = 0; i < SubNo; i++)
                     {
