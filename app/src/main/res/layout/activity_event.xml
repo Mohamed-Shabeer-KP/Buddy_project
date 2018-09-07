@@ -16,13 +16,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/T1"
+                android:id="@+id/status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@string/load"
-                android:textColor="@color/holo_blue_dark" />
+                android:textColor="@color/holo_blue_dark"
+                tools:visibility="invisible" />
 
             <TableLayout
                 android:id="@+id/tb"

@@ -3,6 +3,8 @@ package com.boss.buddy.TimeTable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,30 +17,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Class_Time_Table_activity extends AppCompatActivity {
+    private ScaleGestureDetector mScaleGestureDetector;
+    private float mScaleFactor = 1.0f;
+    private ImageView mImageView;
 
-    private ImageView img;
-    private String url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class__time__table_activity);
-
-        img = findViewById(R.id.imageView);
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Images");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                url = String.valueOf(dataSnapshot.child("timetable").getValue());
-                Glide.with(getApplicationContext()).load(url).into(img);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(Class_Time_Table_activity.this, "FAILED TO FETCH FILE, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
+        mImageView=(ImageView)findViewById(R.id.img_timetable);
+        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        mScaleGestureDetector.onTouchEvent(motionEvent);
+        return true;
+    }
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector){
+            mScaleFactor *= scaleGestureDetector.getScaleFactor();
+            mScaleFactor = Math.max(0.1f,
+                    Math.min(mScaleFactor, 10.0f));
+            mImageView.setScaleX(mScaleFactor);
+            mImageView.setScaleY(mScaleFactor);
+            return true;
+        }
     }
 }
+
