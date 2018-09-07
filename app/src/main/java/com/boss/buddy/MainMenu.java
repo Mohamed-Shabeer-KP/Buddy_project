@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,9 @@ public class MainMenu extends AppCompatActivity {
                 Show.putExtras(BShow);
                 startActivity(Show);
 
+           /*     Uri uri = Uri.parse("https://drive.google.com/open?id=163fnWDRZWrzpOPVWoMefI--zB0W2xUcU"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);*/
             }
         });
 
