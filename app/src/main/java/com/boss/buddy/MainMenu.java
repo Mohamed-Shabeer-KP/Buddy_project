@@ -21,10 +21,6 @@ import com.boss.buddy.TimeTable.Class_Time_Table_activity;
 
 public class MainMenu extends AppCompatActivity {
     boolean exit = false;
-    private int FLAG_AVAILABLE;
-    private int FLAG_FINISHED;
-
-
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -32,38 +28,23 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button schedule_Button = findViewById(R.id.b_shedule);
+        Button timetable_Button = findViewById(R.id.b_timetable);
+        Button gdrive_Button = findViewById(R.id.b_gdrive);
+
         Bundle B = getIntent().getExtras();
         assert B != null;
-        FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
-        FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
-        Button scheduleButton = findViewById(R.id.bshedule);
-        Button timetableButton = findViewById(R.id.btimetable);
-
-        timetableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent Show=new Intent(getApplicationContext(), Class_Time_Table_activity.class);
-                Bundle BShow=new Bundle();
-                Show.putExtras(BShow);
-                startActivity(Show);
-
-           /*     Uri uri = Uri.parse("https://drive.google.com/open?id=163fnWDRZWrzpOPVWoMefI--zB0W2xUcU"); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);*/
-            }
-        });
+        int FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
+        int FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
-            setContentView(R.layout.activity_main);
             Toast.makeText(this, " FAILED TO CONNECT TO INTERNET", Toast.LENGTH_SHORT).show();
         }
 
-
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
-            scheduleButton.setVisibility(View.INVISIBLE);
+            schedule_Button.setVisibility(View.INVISIBLE);
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
             editor.putInt(getString(R.string.StoredValue), 0);
@@ -76,13 +57,12 @@ public class MainMenu extends AppCompatActivity {
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
-                scheduleButton.setText("SET SCHEDULE");
-                scheduleButton.setVisibility(View.VISIBLE);
+                schedule_Button.setText("SET SCHEDULE");
+                schedule_Button.setVisibility(View.VISIBLE);
 
-                scheduleButton.setOnClickListener(new View.OnClickListener() {
+                schedule_Button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
 
                         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -94,16 +74,16 @@ public class MainMenu extends AppCompatActivity {
                         BShow.putInt("flag",0);
                         Show.putExtras(BShow);
                         startActivity(Show);
-
                     }
                 });
             }
+
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
-                scheduleButton.setText("SHOW SCHEDULE");
-                scheduleButton.setVisibility(View.VISIBLE);
+                schedule_Button.setText("SHOW SCHEDULE");
+                schedule_Button.setVisibility(View.VISIBLE);
 
-                scheduleButton.setOnClickListener(new View.OnClickListener() {
+                schedule_Button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent Show=new Intent(getApplicationContext(), EventActivity.class);
@@ -113,11 +93,26 @@ public class MainMenu extends AppCompatActivity {
                         startActivity(Show);
                     }
                 });
-
             }
 
+        timetable_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent tt_show=new Intent(getApplicationContext(), Class_Time_Table_activity.class);
+                startActivity(tt_show);
+            }
+        });
 
-            //----------------CLOUD MESSAGING----------//
+        gdrive_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://drive.google.com/open?id=163fnWDRZWrzpOPVWoMefI--zB0W2xUcU");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create channel to show notifications.
                 String channelId = getString(R.string.default_notification_channel_id);

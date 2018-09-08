@@ -87,7 +87,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        DispEvent =findViewById(R.id.T1);
+        DispEvent =findViewById(R.id.status);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
