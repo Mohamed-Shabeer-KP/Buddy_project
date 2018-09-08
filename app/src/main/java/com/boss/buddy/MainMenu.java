@@ -20,6 +20,7 @@ import com.boss.buddy.TimeTable.Class_Time_Table_activity;
 
 
 public class MainMenu extends AppCompatActivity {
+
     boolean exit = false;
 
     @SuppressLint("SetTextI18n")
