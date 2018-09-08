@@ -95,7 +95,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 .setBackOff(new ExponentialBackOff());
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("CALLING ALL AUTOBOTS");
+        mProgress.setMessage("Take a Deep Breath...");
 
         Bundle BShow=getIntent().getExtras();
         assert BShow != null;
@@ -128,7 +128,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("SubNo").getValue()));
+                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("subNo").getValue()));
                     SubjectDetails[] obj=new SubjectDetails[SubNo];
                     for(int i = 0; i < SubNo; i++)
                     {

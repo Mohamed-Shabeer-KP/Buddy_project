@@ -2,6 +2,16 @@
     <string name="app_name">Buddy</string>
     <string name="load">SCHEDULING EXAM</string>
     <string name="schedule_button">SCHEDULE EXAM</string>
+    <string name="t_sub">SUBJECT     </string>
+    <string name="t_date">DATE  </string>
+    <string name="t_stime">START TIME</string>
+    <string name="t_etime">END TIME  </string>
+    <string name="b_schedule">BUTTON</string>
+    <string name="b_drive"> G DRIVE</string>
+    <string name="b_ttable">TIMETABLE</string>
+    <string name="t_poweredby">Powered by © BossCorp™.</string>
+    <string name="t_welcome1">Hey</string>
+    <string name="t_welcome2">Buddy !</string>
 
     //------------------Shared preferences----------------------//
     <string name="StoredValue">0</string>

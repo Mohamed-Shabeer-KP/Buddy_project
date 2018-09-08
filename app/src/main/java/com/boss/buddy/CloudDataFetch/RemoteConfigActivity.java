@@ -73,7 +73,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
                 startActivity(StartMain);
                 finish();
             }
-        },4000);
+        },6000);
 
 
     }
