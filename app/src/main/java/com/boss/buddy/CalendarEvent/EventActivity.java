@@ -515,6 +515,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             List<Event> items = events.getItems();
 
             for (Event event : items) {
+                String summary = event.getSummary();
                 DateTime start = event.getStart().getDateTime();
                 DateTime end =event.getEnd().getDateTime();
                 String loc = event.getLocation();
@@ -522,7 +523,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     start = event.getStart().getDate();
                 }
                 if(loc.equals("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI"))
-                  eventStrings.add(String.format("%s%s%s", event.getSummary(), start,end));
+                  eventStrings.add(String.format("%s%s%s",summary,start,end));
             }
             return eventStrings;
         }
