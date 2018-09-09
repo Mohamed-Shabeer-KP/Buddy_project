@@ -25,7 +25,8 @@ public class Class_Time_Table_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class__time__table_activity);
-        mImageView=(ImageView)findViewById(R.id.img_timetable);
+        mImageView= findViewById(R.id.img_timetable);
+        Toast.makeText(this, "Pinch to zoom", Toast.LENGTH_SHORT).show();
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
     @Override

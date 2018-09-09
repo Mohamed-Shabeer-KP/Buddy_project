@@ -107,7 +107,7 @@ public class MainMenu extends AppCompatActivity {
         gdrive_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://drive.google.com/open?id=163fnWDRZWrzpOPVWoMefI--zB0W2xUcU");
+                Uri uri = Uri.parse("https://gogreenmca.page.link/drive");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
