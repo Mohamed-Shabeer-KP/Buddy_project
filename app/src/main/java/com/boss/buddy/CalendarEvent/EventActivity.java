@@ -403,7 +403,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 Event event = new Event()
                         .setSummary(summary)
-                        .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCES");
+                        .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI");
                 DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);
@@ -487,9 +487,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .build();
 
         }
-
-
-
         /**
          * Background task to call Google Calendar API.
          * @param params no parameters needed for this task.
@@ -520,11 +517,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 DateTime end =event.getEnd().getDateTime();
+                String loc = event.getLocation();
                 if (start == null) {
                     start = event.getStart().getDate();
                 }
-
-                eventStrings.add(String.format("%s%s%s", event.getSummary(), start,end));
+                if(loc.equals("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI"))
+                  eventStrings.add(String.format("%s%s%s", event.getSummary(), start,end));
             }
             return eventStrings;
         }
@@ -570,7 +568,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                         TextView t = new TextView(getApplicationContext());
                         t.setText(event_details[j]);
                         t.setTextColor(Color.BLACK);
-                        t.setTextSize(14);
+                        t.setTextSize(10);
 
                         cell.addView(t);
                         tr.addView(cell);
