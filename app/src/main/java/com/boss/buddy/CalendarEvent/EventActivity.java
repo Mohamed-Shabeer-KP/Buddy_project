@@ -20,14 +20,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.boss.buddy.CloudDataFetch.RemoteConfigActivity;
 import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -49,6 +52,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,6 +75,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
     private int Flag;
     private int SubNo;
+    private ImageView img;
+    private String url;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
 
     @Override
@@ -87,7 +94,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        DispEvent =findViewById(R.id.status);
+       // DispEvent =findViewById(R.id.status);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -154,14 +161,30 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
     @SuppressLint("SetTextI18n")
     private void getResults() {
-        if (isGooglePlayServicesAvailable()) {
+       /* if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (isDeviceOnline()) {
+        } else */if (isDeviceOnline()) {
             DispEvent.setText("Network connection not available.");
         } else {
-            new getEventTask(mCredential).execute();
+            /*new getEventTask(mCredential).execute();*/
+            img = findViewById(R.id.exam_timetable);
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("exam");
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    url = String.valueOf(dataSnapshot.child("timetable").getValue());
+                    Glide.with(getApplicationContext()).load(url).into(img);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(EventActivity.this, "FAILED TO FETCH FILE, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+            Toast.makeText(this, "Events Retrieved", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -473,7 +496,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    @SuppressLint("StaticFieldLeak")
+ /*   @SuppressLint("StaticFieldLeak")
     public class getEventTask extends AsyncTask<Void, Void, List<String>> {
         com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
@@ -486,12 +509,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .setApplicationName("com.boss.buddy")
                     .build();
 
-        }
+        }*/
         /**
          * Background task to call Google Calendar API.
          * @param params no parameters needed for this task.
          */
-        @Override
+    /*    @Override
         protected List<String> doInBackground(Void... params) {
             try {
                 return getEvent();
@@ -603,7 +626,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 DispEvent.setText("Request cancelled.");
             }
         }
-    }
+    }*/
 }
 
 class SubjectDetails
