@@ -169,7 +169,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             DispEvent.setText("Network connection not available.");
         } else {
             /*new getEventTask(mCredential).execute();*/
-            img = findViewById(R.id.exam_timetable);
+            img = findViewById(R.id.img_timetable);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("exam");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -213,7 +213,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 else
                     setEvents();
             } else {
-                // Start a dialog from which the user can choose an account
                 startActivityForResult(
                         mCredential.newChooseAccountIntent(),
                         REQUEST_ACCOUNT_PICKER);

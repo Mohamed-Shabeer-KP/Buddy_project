@@ -1,5 +1,6 @@
 package com.boss.buddy.TimeTable;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import com.boss.buddy.R;
 public class Class_Time_Table_activity extends AppCompatActivity {
 
     ImageView img_timetable;
-    Toolbar toolbar;
     float scalediff;
     private static final int NONE = 0;
     private static final int DRAG = 1;
@@ -26,6 +26,7 @@ public class Class_Time_Table_activity extends AppCompatActivity {
     private float d = 0f;
     private float newRot = 0f;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +36,11 @@ public class Class_Time_Table_activity extends AppCompatActivity {
         init();
 
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(250, 250);
-        layoutParams.leftMargin = 100;
-        layoutParams.topMargin = 100;
-        layoutParams.bottomMargin = 100;
-        layoutParams.rightMargin = 100;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(900, 900);
+        layoutParams.leftMargin = 200;
+        layoutParams.topMargin = 50;
+        layoutParams.bottomMargin = 50;
+        layoutParams.rightMargin = 200;
         img_timetable.setLayoutParams(layoutParams);
 
         img_timetable.setOnTouchListener(new View.OnTouchListener() {
@@ -48,7 +49,6 @@ public class Class_Time_Table_activity extends AppCompatActivity {
             int startwidth;
             int startheight;
             float dx = 0, dy = 0, x = 0, y = 0;
-            float angle = 0;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -71,8 +71,6 @@ public class Class_Time_Table_activity extends AppCompatActivity {
                         if (oldDist > 10f) {
                             mode = ZOOM;
                         }
-
-                        d = rotation(event);
 
                         break;
                     case MotionEvent.ACTION_UP:
@@ -102,11 +100,6 @@ public class Class_Time_Table_activity extends AppCompatActivity {
                         } else if (mode == ZOOM) {
 
                             if (event.getPointerCount() == 2) {
-
-                                newRot = rotation(event);
-                                float r = newRot - d;
-                                angle = r;
-
                                 x = event.getRawX();
                                 y = event.getRawY();
 
@@ -121,7 +114,7 @@ public class Class_Time_Table_activity extends AppCompatActivity {
                                     }
                                 }
 
-                                view.animate().rotationBy(angle).setDuration(0).setInterpolator(new LinearInterpolator()).start();
+                                view.animate().setDuration(0).setInterpolator(new LinearInterpolator()).start();
 
                                 x = event.getRawX();
                                 y = event.getRawY();
@@ -150,9 +143,7 @@ public class Class_Time_Table_activity extends AppCompatActivity {
 
     private void init() {
 
-        img_timetable = (ImageView) findViewById(R.id.img_timetable);
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        img_timetable = findViewById(R.id.img_timetable);
 
     }
 
@@ -162,11 +153,11 @@ public class Class_Time_Table_activity extends AppCompatActivity {
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    private float rotation(MotionEvent event) {
+/*   private float rotation(MotionEvent event) {
         double delta_x = (event.getX(0) - event.getX(1));
         double delta_y = (event.getY(0) - event.getY(1));
         double radians = Math.atan2(delta_y, delta_x);
         return (float) Math.toDegrees(radians);
-    }
+    }*/
 }
 
