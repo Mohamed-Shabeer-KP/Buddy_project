@@ -152,6 +152,6 @@ public class Class_Time_Table_activity extends AppCompatActivity {
         float y = event.getY(0) - event.getY(1);
         return (float) Math.sqrt(x * x + y * y);
     }
-    
+
 }
 
