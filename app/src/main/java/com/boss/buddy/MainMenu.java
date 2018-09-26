@@ -38,6 +38,7 @@ public class MainMenu extends AppCompatActivity {
 
         Bundle B = getIntent().getExtras();
         assert B != null;
+        
 
         int FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
         int FLAG_FINISHED = B.getInt("FLAG_FINISHED");
