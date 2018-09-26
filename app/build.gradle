@@ -3,13 +3,21 @@ apply plugin: 'io.fabric'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'buddy_key'
+            keyPassword 'bosscorp'
+            storeFile file('C:/Users/moham/Desktop/buddy_sig_key.jks')
+            storePassword 'bosscorp'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.boss.buddy"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName '2.0'
+        versionCode 1
+        versionName '1.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

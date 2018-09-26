@@ -5,29 +5,19 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.boss.buddy.CloudDataFetch.RemoteConfigActivity;
 import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.bumptech.glide.Glide;
@@ -52,7 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +53,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class EventActivity extends Activity implements EasyPermissions.PermissionCallbacks {
     private GoogleAccountCredential mCredential;
-    private TextView DispEvent;
     private ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -77,7 +65,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     private int SubNo;
     private ImageView img;
     private String url;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
 
     @Override
@@ -94,7 +81,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-       // DispEvent =findViewById(R.id.status);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -107,10 +93,10 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         Bundle BShow=getIntent().getExtras();
         assert BShow != null;
         Flag = BShow.getInt("flag");
-        if(Flag==0)
-            setEvents();
-        else
+        if (Flag==1)
             getResults();
+       else
+            setEvents();
 
     }
 
@@ -128,48 +114,46 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (isDeviceOnline()) {
-            DispEvent.setText("No network connection available.");
+            Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
         } else {
 
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Subjects");
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("subNo").getValue()));
-                    SubjectDetails[] obj=new SubjectDetails[SubNo];
-                    for(int i = 0; i < SubNo; i++)
-                    {
-                        obj[i]=new SubjectDetails();
-                        obj[i].setSummary((String) dataSnapshot.child("sub"+i).child("name").getValue());
-                        obj[i].setStartingDate((String) dataSnapshot.child("sub"+i).child("start").getValue());
-                        obj[i].setEndingDate((String) dataSnapshot.child("sub"+i).child("end").getValue());
+            if(Flag==1) {
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Subjects");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        SubNo = Integer.parseInt(String.valueOf(dataSnapshot.child("subNo").getValue()));
+                        SubjectDetails[] obj = new SubjectDetails[SubNo];
+                        for (int i = 0; i < SubNo; i++) {
+                            obj[i] = new SubjectDetails();
+                            obj[i].setSummary((String) dataSnapshot.child("sub" + i).child("name").getValue());
+                            obj[i].setStartingDate((String) dataSnapshot.child("sub" + i).child("start").getValue());
+                            obj[i].setEndingDate((String) dataSnapshot.child("sub" + i).child("end").getValue());
 
-                        new SetEventTask(mCredential,obj[i]).execute();//obj passed as parameter
+                            new SetEventTask(mCredential, obj[i]).execute();//obj passed as parameter
+                        }
+                        getResults();
                     }
-                    getResults();
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+                    }
 
-            });
-
+                });
+            }
+            else if(Flag==2)
+            {
+                new EventDeleteTask(mCredential).execute();
+            }
         }
     }
 
     @SuppressLint("SetTextI18n")
     private void getResults() {
-       /* if (isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else */if (isDeviceOnline()) {
-            DispEvent.setText("Network connection not available.");
-        } else {
-            /*new getEventTask(mCredential).execute();*/
-            img = findViewById(R.id.img_timetable);
+
+
+            img = findViewById(R.id.exam_timetable);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("exam");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -186,7 +170,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             });
             Toast.makeText(this, "Events Retrieved", Toast.LENGTH_SHORT).show();
         }
-    }
+
+
 
 
 
@@ -245,9 +230,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    DispEvent.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+                    Toast.makeText(this, "This app requires Google Play Services. Please install "+
+                            "Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show();
+
                 } else {
                     if(Flag==1)
                         getResults();
@@ -490,17 +475,17 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         }
     }
 
-//-------------------------------EVENT LISTING TASK --------------------------------------------------------------------------------------------//
+//-------------------------------EVENT DELETING TASK --------------------------------------------------------------------------------------------//
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
- /*   @SuppressLint("StaticFieldLeak")
-    public class getEventTask extends AsyncTask<Void, Void, List<String>> {
+   @SuppressLint("StaticFieldLeak")
+    public class EventDeleteTask extends AsyncTask<Void, Void, List<String>> {
         com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
 
-        getEventTask(GoogleAccountCredential credential) {
+        EventDeleteTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -508,12 +493,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     .setApplicationName("com.boss.buddy")
                     .build();
 
-        }*/
-        /**
-         * Background task to call Google Calendar API.
-         * @param params no parameters needed for this task.
-         */
-    /*    @Override
+        }
+
+        @Override
         protected List<String> doInBackground(Void... params) {
             try {
                 return getEvent();
@@ -523,13 +505,15 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 return null;
             }
         }
-
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
         private List<String> getEvent() throws IOException {
-            // List the next 30 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
+            DateTime now = new DateTime(System.currentTimeMillis() - 60 * 24 * 3600 * 1000L);
+
             List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(30)
+                    .setMaxResults(300)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -537,15 +521,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             List<Event> items = events.getItems();
 
             for (Event event : items) {
-                String summary = event.getSummary();
-                DateTime start = event.getStart().getDateTime();
-                DateTime end =event.getEnd().getDateTime();
                 String loc = event.getLocation();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
                 if(loc.equals("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI"))
-                  eventStrings.add(String.format("%s%s%s",summary,start,end));
+                {
+                    mService.events().delete("primary",event.getId()).execute();
+                }
             }
             return eventStrings;
         }
@@ -553,7 +533,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
         @Override
         protected void onPreExecute() {
-            DispEvent.setText("");
             mProgress.show();
         }
 
@@ -561,47 +540,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            if (output == null || output.size() == 0) {
-                DispEvent.setText("No Events Found");
-                Toast.makeText(EventActivity.this, "No Events Found",
-                        Toast.LENGTH_SHORT).show();
-
-            } else {
-                DispEvent.setText( "EVENTS RETRIEVED");
-                TableLayout table = findViewById(R.id.tb);
-                table.setVisibility(View.VISIBLE);
-                for(int i=0;i<output.size();i++) {
-                    TableRow tr = new TableRow(getApplicationContext());
-
-                    String event;
-                    String event_details[] = new String[4];
-                    int pos;
-                    event = output.get(i);
-                    pos = event.indexOf("2", 0);
-                    event_details[0] = " "+event.substring(0, pos)+" ";
-                    event_details[1] = " "+event.substring(pos, pos + 10)+" ";
-                    event_details[2] = " "+event.substring(pos + 11, pos + 19)+" ";
-                    event_details[3] = " "+event.substring(pos + 40, pos + 48)+" ";
-
-                    for (int j = 0; j < 4; j++) {
-                        LinearLayout cell = new LinearLayout(getApplicationContext());
-                        cell.setPadding(7,7,7,7);
-                        cell.setBackground(getDrawable(R.drawable.cellborder));
-
-                        TextView t = new TextView(getApplicationContext());
-                        t.setText(event_details[j]);
-                        t.setTextColor(Color.BLACK);
-                        t.setTextSize(10);
-
-                        cell.addView(t);
-                        tr.addView(cell);
-                    }
-                    table.addView(tr);
-                }
-                Toast.makeText(EventActivity.this, "Events Retrieved",
-                        Toast.LENGTH_SHORT).show();
-
-            }
+            startActivity(new Intent(getApplicationContext(), MainMenu.class));
         }
 
         @SuppressLint("SetTextI18n")
@@ -618,14 +557,14 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    DispEvent.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+                    Toast.makeText(EventActivity.this, "The following error occurred:"+ mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
             } else {
-                DispEvent.setText("Request cancelled.");
+                Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
         }
-    }*/
+    }
 }
 
 class SubjectDetails

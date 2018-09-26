@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.boss.buddy.CalendarEvent.EventActivity;
 import com.boss.buddy.TimeTable.Class_Time_Table_activity;
+import com.google.api.client.util.DateTime;
+
+import java.util.Date;
 
 
 public class MainMenu extends AppCompatActivity {
@@ -39,6 +42,10 @@ public class MainMenu extends AppCompatActivity {
         int FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
         int FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
+        int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
+
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
             Toast.makeText(this, " FAILED TO CONNECT TO INTERNET", Toast.LENGTH_SHORT).show();
@@ -46,15 +53,21 @@ public class MainMenu extends AppCompatActivity {
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
             schedule_Button.setVisibility(View.INVISIBLE);
+
+                if(SCHEDULE_DONE==1) {
+                Intent Show = new Intent(getApplicationContext(), EventActivity.class);
+                Bundle BShow = new Bundle();
+                BShow.putInt("flag", 2);
+                Show.putExtras(BShow);
+                startActivity(Show);
+            }
+
             SharedPreferences SPW = this.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = SPW.edit();
             editor.putInt(getString(R.string.StoredValue), 0);
             editor.apply();
-        }
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-        int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
+        }
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
@@ -101,6 +114,7 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Intent tt_show=new Intent(getApplicationContext(), Class_Time_Table_activity.class);
                 startActivity(tt_show);
+
             }
         });
 
