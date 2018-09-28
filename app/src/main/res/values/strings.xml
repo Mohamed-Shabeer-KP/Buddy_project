@@ -13,6 +13,14 @@
     <string name="t_welcome1">Hey</string>
     <string name="t_welcome2">Buddy !</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+
     //------------------Shared preferences----------------------//
     <string name="StoredValue">0</string>
     <string name="DefaultValue">0</string>
@@ -34,6 +42,7 @@
      -->
     <string name="default_notification_channel_name" translatable="true">News</string>
     <string name="msg_subscribe_failed">Failed to subscribe to news topic</string>
+    <string name="timetable">TIMETABLE</string>
 
     //------------------CLOUD MESSAGING--------------------------------//
 </resources>
