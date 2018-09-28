@@ -11,7 +11,6 @@
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
     <color name="app_color">#0098cb</color>
-    <color name="background_material_light">#ffffff</color>
     <color name="primary_material_dark">#3f51b5</color>
     <color name="primary_dark_material_dark">#ffffff</color>
     <color name="holo_blue_dark">#0ca6c9</color>

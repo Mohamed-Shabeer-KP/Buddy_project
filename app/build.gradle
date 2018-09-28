@@ -7,7 +7,7 @@ android {
         config {
             keyAlias 'buddy_key'
             keyPassword 'bosscorp'
-          //  storeFile file('C:/Users/moham/Desktop/buddy_sig_key.jks')
+            //  storeFile file('C:/Users/moham/Desktop/buddy_sig_key.jks')
             storePassword 'bosscorp'
         }
     }
@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-iid:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.3.1'
     implementation 'com.google.firebase:firebase-storage:16.0.2'
-  //  implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    //  implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation 'com.google.firebase:firebase-perf:16.1.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'

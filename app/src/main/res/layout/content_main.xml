@@ -35,7 +35,7 @@
         android:background="@drawable/button_design1"
         android:shadowColor="#A8A8A8"
         android:shadowRadius="5"
-        android:text="@string/timetable"
+        android:text="@string/b_ttable"
         android:textColor="#ffffff"
         android:textSize="17sp"
         android:textStyle="bold"

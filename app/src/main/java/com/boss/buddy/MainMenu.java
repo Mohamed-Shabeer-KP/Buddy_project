@@ -1,9 +1,12 @@
 package com.boss.buddy;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -48,7 +51,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Hey Buddy...! This space will be filled soon.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -208,8 +211,19 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_exit) {
+
+            new AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to exit?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -218,18 +232,22 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_ttable) {
-
-        } else if (id == R.id.nav_about) {
-
-        }  else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+            Intent home=new Intent(getApplicationContext(), MainMenu.class);
+            startActivity(home);
+        }
+        else if (id == R.id.nav_ttable) {
+            Intent tt_show=new Intent(getApplicationContext(), Class_Time_Table_activity.class);
+            startActivity(tt_show);
+        }
+        else if (id == R.id.nav_about) {
+            Intent about=new Intent(getApplicationContext(), About.class);
+            startActivity(about);
+        }
+        else if (id == R.id.nav_contact) {
 
         }
 
