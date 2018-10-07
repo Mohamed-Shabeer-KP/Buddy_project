@@ -57,9 +57,10 @@
         <!-- [START firebase_iid_service] -->
         <!-- [END firebase_iid_service] -->
         //---------------CLOUD MESSAGING------------------//
-        <activity android:name=".About"
+        <activity
+            android:name=".About"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".ContactUs"></activity>
     </application>
 
 </manifest>

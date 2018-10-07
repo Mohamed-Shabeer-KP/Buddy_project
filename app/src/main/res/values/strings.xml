@@ -25,6 +25,8 @@
         The main feature of the application is to remotely add the examination timetable to the user\'s Google Calendar and thereby generating reminders about the exam. The application will display details of important events such as project and assignment submissions,
         test papers e.t.c and other announcements as notifications provided, the device need to be connected to the internet.
     </string>
+    <string name="contact_content">Contact Us at:</string>
+    <string name="contact_email">incorporatedboss@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_exit">Exit</string>
 

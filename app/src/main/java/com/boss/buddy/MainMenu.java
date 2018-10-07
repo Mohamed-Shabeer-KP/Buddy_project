@@ -248,7 +248,8 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(about);
         }
         else if (id == R.id.nav_contact) {
-
+            Intent contact=new Intent(getApplicationContext(), ContactUs.class);
+            startActivity(contact);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
