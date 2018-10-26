@@ -59,8 +59,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
+                message = "Data fetch failed";
             }
 
         });
