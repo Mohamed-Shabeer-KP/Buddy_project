@@ -117,7 +117,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
         } else {
 
-            if(Flag==1) {
+            if(Flag==0) {
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Subjects");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
