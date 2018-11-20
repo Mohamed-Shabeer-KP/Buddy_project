@@ -129,7 +129,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(EventActivity.this, R.string.app_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
                     }
 
                 });
@@ -155,7 +155,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(EventActivity.this, R.string.app_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
                 }
 
             });
