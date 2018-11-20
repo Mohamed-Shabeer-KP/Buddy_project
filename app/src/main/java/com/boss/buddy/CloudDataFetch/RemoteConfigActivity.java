@@ -7,11 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.boss.buddy.BuildConfig;
 import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
-import com.boss.buddy.TimeTable.Class_Time_Table_activity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,7 +42,6 @@ public class RemoteConfigActivity extends AppCompatActivity {
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         fetchValues();
 
-
         img = findViewById(R.id.splash_img);
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Images");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -56,7 +53,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RemoteConfigActivity.this, "FAILED TO FETCH FILE, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RemoteConfigActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -73,8 +70,6 @@ public class RemoteConfigActivity extends AppCompatActivity {
                 finish();
             }
         },6000);
-
-
     }
 
     private void fetchValues() {
@@ -92,9 +87,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
                             mFirebaseRemoteConfig.activateFetched();
                             FLAG_SCHEDULE_AVAILABLE = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_AVAILABLE"));
                             FLAG_SCHEDULE_FINISHED = Integer.parseInt(mFirebaseRemoteConfig.getString("SCHEDULE_FINISHED"));
-
                         }
-
                     }
                 });
     }

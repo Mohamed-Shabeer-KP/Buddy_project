@@ -1,7 +1,5 @@
 package com.boss.buddy;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -27,38 +25,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.boss.buddy.CalendarEvent.EventActivity;
 import com.boss.buddy.TimeTable.Class_Time_Table_activity;
-import com.bumptech.glide.Glide;
-import com.google.api.client.util.DateTime;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
-
-
 public class MainMenu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
-    boolean exit = false;
-    String message = "";
-    FloatingActionButton fab ;
+    private boolean exit;
+    private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
+        exit= false;
+        message="";
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         Button schedule_Button = findViewById(R.id.b_shedule);
         Button timetable_Button = findViewById(R.id.b_timetable);
         Button gdrive_Button = findViewById(R.id.b_gdrive);
@@ -75,11 +65,10 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
-            Toast.makeText(this, " FAILED TO CONNECT TO INTERNET", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
         }
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
-
                 schedule_Button.setVisibility(View.INVISIBLE);
 
                 if(SCHEDULE_DONE==1) {
@@ -94,14 +83,12 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             SharedPreferences.Editor editor = SPW.edit();
             editor.putInt(getString(R.string.StoredValue), 0);
             editor.apply();
-
         }
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
-                schedule_Button.setText("SET SCHEDULE");
+                schedule_Button.setText(R.string.b_set_schedule);
                 schedule_Button.setVisibility(View.VISIBLE);
-
                 schedule_Button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -122,7 +109,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
-                schedule_Button.setText("SHOW SCHEDULE");
+                schedule_Button.setText(R.string.b_show_schedule);
                 schedule_Button.setVisibility(View.VISIBLE);
 
                 schedule_Button.setOnClickListener(new View.OnClickListener() {
@@ -149,14 +136,13 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         gdrive_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://gogreenmca.page.link/drive");
+                Uri uri = Uri.parse(String.valueOf(R.string.drive_link));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
         });
 
         //Retrieving value for snack bar
-
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("notification");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -165,10 +151,11 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                message = "Data fetch failed";
+                message = String.valueOf(R.string.app_fetch_error);
             }
 
         });
+
         // Navigation Bar Code
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -181,7 +168,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         // Floating Action Bar Event
         fab.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("RestrictedApi")
+
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, message, Snackbar.LENGTH_LONG)
@@ -202,28 +189,6 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
             //----------------CLOUD MESSAGING----------//
         }
-
-
-    @Override
-    public void onBackPressed() {
-
-
-        if (exit) {
-            System.exit(0);
-        } else {
-            Toast.makeText(this, "PRESS AGAIN TO EXIT",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3000);
-
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -251,12 +216,9 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
                     })
                     .setNegativeButton("No", null)
                     .show();
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -280,9 +242,26 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(contact);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            System.exit(0);
+        } else {
+            Toast.makeText(this, R.string.back_exit,
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3000);
+        }
     }
 }
 

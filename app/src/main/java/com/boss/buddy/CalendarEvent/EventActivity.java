@@ -1,6 +1,5 @@
 package com.boss.buddy.CalendarEvent;
 
-
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -17,7 +16,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.boss.buddy.MainMenu;
 import com.boss.buddy.R;
 import com.bumptech.glide.Glide;
@@ -42,12 +40,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -73,10 +69,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         System.exit(0);
     }
 
-    /**
-     * Create the main activity.
-     * @param savedInstanceState previously saved instance data.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +80,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 .setBackOff(new ExponentialBackOff());
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Take a Deep Breath...");
+        mProgress.setMessage(String.valueOf(R.string.loading));
 
         Bundle cal_op=getIntent().getExtras();
 
@@ -114,7 +106,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (isDeviceOnline()) {
-            Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
         } else {
 
             if(Flag==0) {
@@ -130,14 +122,14 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             obj[i].setStartingDate((String) dataSnapshot.child("sub" + i).child("start").getValue());
                             obj[i].setEndingDate((String) dataSnapshot.child("sub" + i).child("end").getValue());
 
-                            new SetEventTask(mCredential, obj[i]).execute();//obj passed as parameter
+                            new SetEventTask(mCredential, obj[i]).execute();  //obj passed as parameter
                         }
                         getResults();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(EventActivity.this, "FAILED TO FETCH DATA, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventActivity.this, R.string.app_error, Toast.LENGTH_SHORT).show();
                     }
 
                 });
@@ -152,7 +144,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
     @SuppressLint("SetTextI18n")
     private void getResults() {
 
-
             img = findViewById(R.id.exam_timetable);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("exam");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -164,16 +155,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(EventActivity.this, "FAILED TO FETCH FILE, PLEASE RELOAD APP AGAIN.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, R.string.app_error, Toast.LENGTH_SHORT).show();
                 }
 
             });
-            Toast.makeText(this, "Events Retrieved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.event_retrieved, Toast.LENGTH_SHORT).show();
         }
-
-
-
-
 
     /**
      * Attempts to set the account used with the API credentials. If an account
@@ -206,7 +193,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    String.valueOf(R.string.app_access_request),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
 
@@ -232,10 +219,9 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    Toast.makeText(this, "This app requires Google Play Services. Please install "+
-                            "Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show();
-
-                } else {
+                    Toast.makeText(this, R.string.google_play_require, Toast.LENGTH_SHORT).show();
+                }
+                else {
                     if(Flag==1)
                         getResults();
                     else
@@ -369,8 +355,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         dialog.show();
     }
 
-
-
     //-----------------EVENT CREATION TASK-----------------------------------------------------------------------------------------//
 
     @SuppressLint("StaticFieldLeak")
@@ -412,7 +396,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 Event event = new Event()
                         .setSummary(summary)
-                        .setLocation("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI");
+                        .setLocation(String.valueOf(R.string.event_loc));
                 DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);
@@ -450,7 +434,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            Toast.makeText(EventActivity.this, "Event Update Succeeded",
+            Toast.makeText(EventActivity.this, R.string.event_set_successfull,
                     Toast.LENGTH_SHORT).show();
 
         }
@@ -468,16 +452,17 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(EventActivity.this, "The following error occurred:" +
+                    Toast.makeText(EventActivity.this, R.string.error_occured +
                             mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(EventActivity.this, "Request Failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventActivity.this, R.string.event_set_not_successfull, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 //-------------------------------EVENT DELETING TASK --------------------------------------------------------------------------------------------//
+
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
@@ -494,7 +479,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     transport, jsonFactory, credential)
                     .setApplicationName("com.boss.buddy")
                     .build();
-
         }
 
         @Override
@@ -524,7 +508,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
             for (Event event : items) {
                 String loc = event.getLocation();
-                if(loc.equals("AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI"))
+                if(loc.equals(String.valueOf(R.string.event_loc)))
                 {
                     mService.events().delete("primary",event.getId()).execute();
                 }
@@ -559,11 +543,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(EventActivity.this, "The following error occurred:"+ mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, R.string.error_occured+ mLastError.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
             } else {
-                Toast.makeText(EventActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventActivity.this, R.string.event_set_not_successfull, Toast.LENGTH_SHORT).show();
             }
         }
     }

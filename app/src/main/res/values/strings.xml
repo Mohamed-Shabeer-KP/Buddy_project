@@ -2,12 +2,11 @@
     <string name="app_name">Buddy</string>
     <string name="load">SCHEDULING EXAM</string>
     <string name="schedule_button">SCHEDULE EXAM</string>
-    <string name="t_sub">SUBJECT     </string>
-    <string name="t_date">DATE  </string>
-    <string name="t_stime">START TIME</string>
-    <string name="t_etime">END TIME  </string>
     <string name="b_schedule">BUTTON</string>
+    <string name="b_set_schedule">SET SCHEDULE</string>
+    <string name="b_show_schedule">SHOW SCHEDULE</string>
     <string name="b_drive"> G DRIVE</string>
+    <string name="drive_link">https://gogreenmca.page.link/drive</string>
     <string name="b_ttable">TIMETABLE</string>
     <string name="t_poweredby">Powered by © BossCorp™</string>
     <string name="t_welcome1">Hey</string>
@@ -29,6 +28,21 @@
     <string name="contact_email">incorporatedboss@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_exit">Exit</string>
+
+    <string name="back_exit">PRESS AGAIN TO EXIT</string>
+    <string name="loading">Take a Deep Breath …</string>
+
+    <string name="connection_error">No network connection available</string>
+    <string name="connection_failed">FAILED TO CONNECT TO INTERNET</string>
+    <string name="app_fetch_error">Failed To Fetch Data, Please Reload App Again</string>
+    <string name="event_retrieved">Events Retrieved</string>
+    <string name="app_access_request">This app needs to access your Google account (via Contacts).</string>
+    <string name="google_play_require">This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.</string>
+
+    <string name="event_loc">AMRITA SCHOOL OF ARTS AND SCIENCES,KOCHI</string>
+    <string name="event_set_successfull">Event Update Succeeded</string>
+    <string name="event_set_not_successfull">Request Failed</string>
+    <string name="error_occured">The following error occurred:</string>
 
 
     //------------------Shared preferences----------------------//
