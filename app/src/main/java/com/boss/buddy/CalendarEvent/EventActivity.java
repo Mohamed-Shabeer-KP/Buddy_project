@@ -196,8 +196,6 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     String.valueOf(R.string.app_access_request),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
-
-
         }
     }
 
