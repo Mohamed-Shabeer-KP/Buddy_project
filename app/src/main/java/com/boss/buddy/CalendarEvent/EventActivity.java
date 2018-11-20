@@ -90,12 +90,12 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Take a Deep Breath...");
 
-        Bundle BShow=getIntent().getExtras();
-        assert BShow != null;
-        Flag = BShow.getInt("flag");
+        Bundle cal_op=getIntent().getExtras();
+
+        Flag = cal_op.getInt("flag");
         if (Flag==1)
             getResults();
-       else
+        else
             setEvents();
 
     }
@@ -107,7 +107,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    @SuppressLint("SetTextI18n")
+
     private void setEvents() {
         if (isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
@@ -209,6 +209,8 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                     "This app needs to access your Google account (via Contacts).",
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
+
+
         }
     }
 

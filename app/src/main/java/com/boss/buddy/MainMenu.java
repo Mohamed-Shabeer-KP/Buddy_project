@@ -45,63 +45,33 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
     boolean exit = false;
     String message = "";
+    FloatingActionButton fab ;
 
-    @SuppressLint({"SetTextI18n", "RestrictedApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("notification");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                message = (String) dataSnapshot.child("message").getValue();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                message = "Data fetch failed";
-            }
-
-        });
-
-        Toolbar toolbar =  findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
 
-        final FloatingActionButton fab =  findViewById(R.id.fab);
-           // fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        fab = findViewById(R.id.fab);
         Button schedule_Button = findViewById(R.id.b_shedule);
         Button timetable_Button = findViewById(R.id.b_timetable);
         Button gdrive_Button = findViewById(R.id.b_gdrive);
 
         Bundle B = getIntent().getExtras();
-        assert B != null;
 
         int FLAG_AVAILABLE = B.getInt("FLAG_AVAILABLE");
         int FLAG_FINISHED = B.getInt("FLAG_FINISHED");
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-        int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
+        int SCHEDULE_DONE = sharedPref.getInt(String.valueOf(R.string.StoredValue), defaultValue);
+
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
@@ -109,7 +79,8 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         }
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
-            schedule_Button.setVisibility(View.INVISIBLE);
+
+                schedule_Button.setVisibility(View.INVISIBLE);
 
                 if(SCHEDULE_DONE==1) {
                 Intent Show = new Intent(getApplicationContext(), EventActivity.class);
@@ -184,7 +155,41 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-        //----------------CLOUD MESSAGING----------//
+        //Retrieving value for snack bar
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("notification");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                message = (String) dataSnapshot.child("message").getValue();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                message = "Data fetch failed";
+            }
+
+        });
+        // Navigation Bar Code
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Floating Action Bar Event
+        fab.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+            //----------------CLOUD MESSAGING----------//
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create channel to show notifications.
                 String channelId = getString(R.string.default_notification_channel_id);
@@ -214,7 +219,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
                 public void run() {
                     exit = false;
                 }
-            }, 3 * 1000);
+            }, 3000);
 
         }
 

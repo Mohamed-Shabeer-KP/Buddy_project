@@ -61,7 +61,6 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
         });
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -84,6 +83,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
         if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
             cacheExpiration = 0;
         }
+
         mFirebaseRemoteConfig.fetch(cacheExpiration)
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
