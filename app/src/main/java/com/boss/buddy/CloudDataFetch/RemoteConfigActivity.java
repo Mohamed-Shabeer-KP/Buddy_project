@@ -42,6 +42,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         fetchValues();
 
+
         img = findViewById(R.id.splash_img);
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Images");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -53,7 +54,7 @@ public class RemoteConfigActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RemoteConfigActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RemoteConfigActivity.this,  getString(R.string.app_fetch_error), Toast.LENGTH_SHORT).show();
             }
 
         });

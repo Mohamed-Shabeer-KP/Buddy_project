@@ -7,6 +7,7 @@
     <string name="b_show_schedule">SHOW SCHEDULE</string>
     <string name="b_drive"> G DRIVE</string>
     <string name="drive_link">https://gogreenmca.page.link/drive</string>
+
     <string name="b_ttable">TIMETABLE</string>
     <string name="t_poweredby">Powered by © BossCorp™</string>
     <string name="t_welcome1">Hey</string>
@@ -35,7 +36,6 @@
     <string name="connection_error">No network connection available</string>
     <string name="connection_failed">FAILED TO CONNECT TO INTERNET</string>
     <string name="app_fetch_error">Failed To Fetch Data, Please Reload App Again</string>
-    <string name="event_retrieved">Events Retrieved</string>
     <string name="app_access_request">This app needs to access your Google account (via Contacts).</string>
     <string name="google_play_require">This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.</string>
 

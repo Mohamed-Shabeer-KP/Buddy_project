@@ -60,12 +60,12 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         int defaultValue = Integer.parseInt(getResources().getString(R.string.DefaultValue));
-        int SCHEDULE_DONE = sharedPref.getInt(String.valueOf(R.string.StoredValue), defaultValue);
+        int SCHEDULE_DONE = sharedPref.getInt(getString(R.string.StoredValue), defaultValue);
 
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 0)
         {
-            Toast.makeText(this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.app_fetch_error), Toast.LENGTH_SHORT).show();
         }
 
         if (FLAG_AVAILABLE == 0 && FLAG_FINISHED == 1) {
@@ -87,8 +87,9 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 0 )
             {
-                schedule_Button.setText(R.string.b_set_schedule);
+                schedule_Button.setText(getString(R.string.b_set_schedule));
                 schedule_Button.setVisibility(View.VISIBLE);
+
                 schedule_Button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -109,7 +110,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
             if (FLAG_AVAILABLE == 1 && SCHEDULE_DONE == 1 )
              {
-                schedule_Button.setText(R.string.b_show_schedule);
+                schedule_Button.setText(getString(R.string.b_show_schedule));
                 schedule_Button.setVisibility(View.VISIBLE);
 
                 schedule_Button.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +137,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         gdrive_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(String.valueOf(R.string.drive_link));
+                Uri uri = Uri.parse(getString(R.string.drive_link));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
@@ -151,9 +152,8 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                message = String.valueOf(R.string.app_fetch_error);
+                message = getString(R.string.app_fetch_error);
             }
-
         });
 
         // Navigation Bar Code
@@ -190,6 +190,26 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             //----------------CLOUD MESSAGING----------//
         }
 
+
+    @Override
+    public void onBackPressed() {
+
+
+        if (exit) {
+            System.exit(0);
+        } else {
+            Toast.makeText(this, getString(R.string.back_exit),
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3000);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -217,8 +237,10 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
                     .setNegativeButton("No", null)
                     .show();
         }
+
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -245,23 +267,6 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            System.exit(0);
-        } else {
-            Toast.makeText(this, R.string.back_exit,
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3000);
-        }
     }
 }
 

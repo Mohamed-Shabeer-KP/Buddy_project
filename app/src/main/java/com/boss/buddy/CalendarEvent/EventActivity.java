@@ -80,7 +80,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                 .setBackOff(new ExponentialBackOff());
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage(String.valueOf(R.string.loading));
+        mProgress.setMessage(getString(R.string.loading));
 
         Bundle cal_op=getIntent().getExtras();
 
@@ -106,7 +106,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (isDeviceOnline()) {
-            Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
         } else {
 
             if(Flag==0) {
@@ -129,7 +129,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(EventActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventActivity.this, getString(R.string.app_fetch_error), Toast.LENGTH_SHORT).show();
                     }
 
                 });
@@ -155,11 +155,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(EventActivity.this, R.string.app_fetch_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, getString(R.string.app_fetch_error), Toast.LENGTH_SHORT).show();
                 }
 
             });
-            Toast.makeText(this, R.string.event_retrieved, Toast.LENGTH_SHORT).show();
+
         }
 
     /**
@@ -193,7 +193,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    String.valueOf(R.string.app_access_request),
+                    getString(R.string.app_access_request),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -217,7 +217,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    Toast.makeText(this, R.string.google_play_require, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.google_play_require), Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if(Flag==1)
@@ -394,7 +394,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
                 Event event = new Event()
                         .setSummary(summary)
-                        .setLocation(String.valueOf(R.string.event_loc));
+                        .setLocation(getString(R.string.event_loc));
                 DateTime startDateTime = new DateTime(start+"+05:30");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime);
@@ -432,7 +432,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            Toast.makeText(EventActivity.this, R.string.event_set_successfull,
+            Toast.makeText(EventActivity.this, getString(R.string.event_set_successfull),
                     Toast.LENGTH_SHORT).show();
 
         }
@@ -450,11 +450,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(EventActivity.this, R.string.error_occured +
+                    Toast.makeText(EventActivity.this, getString(R.string.error_occured)+
                             mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(EventActivity.this, R.string.event_set_not_successfull, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventActivity.this, getString(R.string.event_set_not_successfull), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -506,7 +506,7 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
 
             for (Event event : items) {
                 String loc = event.getLocation();
-                if(loc.equals(String.valueOf(R.string.event_loc)))
+                if(loc.equals(getString(R.string.event_loc)))
                 {
                     mService.events().delete("primary",event.getId()).execute();
                 }
@@ -541,11 +541,11 @@ public class EventActivity extends Activity implements EasyPermissions.Permissio
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             EventActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(EventActivity.this, R.string.error_occured+ mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, getString(R.string.error_occured)+ mLastError.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
             } else {
-                Toast.makeText(EventActivity.this, R.string.event_set_not_successfull, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventActivity.this, getString(R.string.event_set_not_successfull), Toast.LENGTH_SHORT).show();
             }
         }
     }
